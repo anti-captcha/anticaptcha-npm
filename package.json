@@ -1,0 +1,31 @@
+{
+  "name": "@antiadmin/anticaptchaofficial",
+  "version": "1.0.8",
+  "description": "Official Anti-Captcha.com npm library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "anticaptcha",
+    "captcha",
+    "recaptcha",
+    "hcaptcha",
+    "recaptchav2",
+    "funcaptcha",
+    "geetest",
+    "antigate",
+    "2captcha",
+    "decaptcher",
+    "deathbycaptcha"
+  ],
+  "author": "Anti Admin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdminAnticaptcha/anticaptcha-npm/issues"
+  },
+  "homepage": "https://github.com/AdminAnticaptcha/anticaptcha-npm#readme",
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}
