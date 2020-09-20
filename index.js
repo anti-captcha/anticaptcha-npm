@@ -4,30 +4,8 @@ module.exports = {
         clientKey : '12345678901234567890123456789012',
 
         // reCAPTCHA 2
-        websiteUrl: null,
-        websiteKey: null,
         websiteSToken: null,
         recaptchaDataSValue: null,
-        proxyType: 'http',
-        proxyAddress: null,
-        proxyPort: null,
-        proxyLogin: null,
-        proxyPassword: null,
-        userAgent: '',
-        cookies: '',
-
-        // reCAPTCHA 3
-        minScore: '',
-        pageAction: '',
-
-        // FunCaptcha
-        websitePublicKey: null,
-        funcaptchaApiJSSubdomain: null,
-
-        // GeeTest
-        websiteChallenge: null,
-        geetestApiServerSubdomain: null,
-        geetestGetLib: null,
 
         // image
         phrase: null,
@@ -68,7 +46,8 @@ module.exports = {
                     math:           this.settings.math,
                     minLength:      this.settings.minLength,
                     maxLength:      this.settings.maxLength
-                }
+                },
+                'languagePool' : this.settings.languagePool
             })
                 .then(res => {
                     return this.waitForResult(res.taskId);
