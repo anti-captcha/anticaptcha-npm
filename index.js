@@ -19,10 +19,15 @@ module.exports = {
         connectionTimeout: 20,
         firstAttemptWaitingInterval: 5,
         normalWaitingInterval: 2,
+        isVerbose: true,
+        taskId: 0
 
     },
     setAPIKey(key) {
         this.settings.clientKey = key;
+    },
+    shutUp() {
+        this.settings.isVerbose = false;
     },
     getBalance() {
         return new Promise((resolve, reject) => {
@@ -50,9 +55,20 @@ module.exports = {
                 'languagePool' : this.settings.languagePool
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => resolve(solution.text))
+                .catch(err => reject(err));
+        });
+    },
+    reportIncorrectImageCaptcha() {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('reportIncorrectImageCaptcha', {
+                'clientKey' : this.settings.clientKey,
+                'taskId': this.settings.taskId
+            })
+                .then(resolve)
                 .catch(err => reject(err));
         });
     },
@@ -70,6 +86,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -110,6 +127,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -136,11 +154,23 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
                     resolve(solution.gRecaptchaResponse)
                 })
+                .catch(err => reject(err));
+        });
+    },
+
+    reportIncorrectRecaptcha() {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('reportIncorrectRecaptcha', {
+                'clientKey' : this.settings.clientKey,
+                'taskId': this.settings.taskId
+            })
+                .then(resolve)
                 .catch(err => reject(err));
         });
     },
@@ -157,6 +187,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -193,6 +224,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -219,6 +251,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -256,6 +289,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -288,6 +322,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -331,6 +366,7 @@ module.exports = {
                 }
             })
                 .then(res => {
+                    this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
@@ -348,8 +384,8 @@ module.exports = {
 
             (async () => {
 
-                console.log('created task with ID '+taskId);
-                console.log('waiting '+this.settings.firstAttemptWaitingInterval+' seconds');
+                if (this.settings.isVerbose) console.log('created task with ID '+taskId);
+                if (this.settings.isVerbose) console.log('waiting '+this.settings.firstAttemptWaitingInterval+' seconds');
                 await this.delay(this.settings.firstAttemptWaitingInterval * 1000);
 
                 while (taskId > 0) {
@@ -358,13 +394,12 @@ module.exports = {
                         'taskId'    :   taskId
                     })
                         .then(response => {
-                            if (response.status == 'ready') {
-                                // console.log(response);
-                                taskId = 0
+                            if (response.status === 'ready') {
+                                taskId = 0;
                                 resolve(response.solution);
                             }
-                            if (response.status == 'processing') {
-                                console.log('captcha result is not yet ready');
+                            if (response.status === 'processing') {
+                                if (this.settings.isVerbose) console.log('captcha result is not yet ready');
                             }
                         })
                         .catch(error => {
@@ -373,7 +408,7 @@ module.exports = {
                         });
 
 
-                    console.log('waiting '+this.settings.normalWaitingInterval+' seconds');
+                    if (this.settings.isVerbose) console.log('waiting '+this.settings.normalWaitingInterval+' seconds');
                     await this.delay(this.settings.normalWaitingInterval * 1000);
 
                 }
@@ -404,7 +439,6 @@ module.exports = {
                     }
                 })
                 .then(res => {
-                    // console.log('received response, checking for errors');
                     return this.checkForErrors(res.data);
                 })
                 .then(data => {
@@ -417,13 +451,11 @@ module.exports = {
     },
     checkForErrors(response) {
         return new Promise((resolve, reject) => {
-            // console.log('checking this:');
-            // console.log(response);
-            if (typeof response.errorId == "undefined") {
+            if (typeof response.errorId === "undefined") {
                 reject("Incorrect API response, something is wrong");
                 return;
             }
-            if (typeof response.errorId != "number") {
+            if (typeof response.errorId !== "number") {
                 reject("Unknown API error code "+response.errorId);
                 return;
             }

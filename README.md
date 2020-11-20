@@ -21,6 +21,11 @@ ac.getBalance()
 
 ```
 
+Disable verbose output to console:
+```javascript
+ac.shutUp();
+```
+
 Solve Recaptcha V2 without proxy:
 ```javascript
 ac.settings.recaptchaDataSValue = 'set me for google.com domains';
@@ -33,6 +38,12 @@ ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
     .catch(error => console.log('test received error '+error));
 ```
 
+Report last solved Recaptcha v2/v3 as incorrect (must read [this](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/632193041/reportIncorrectRecaptcha+send+complaint+on+a+Recaptcha) before using):
+```javascript
+ac.reportIncorrectRecaptcha();
+```
+
+
 Solve image captcha:
 ```javascript
 const fs = require('fs');
@@ -40,6 +51,11 @@ const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
 ac.solveImage(captcha, true)
     .then(text => console.log('captcha text: '+text))
     .catch(error => console.log('test received error '+error));
+```
+
+Report last solved image captcha as incorrect (must read [this](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/48693258/reportIncorrectImageCaptcha+send+complaint+on+an+image+captcha) before using):
+```javascript
+ac.reportIncorrectImageCaptcha();
 ```
 
 
