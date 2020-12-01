@@ -20,7 +20,10 @@ module.exports = {
         firstAttemptWaitingInterval: 5,
         normalWaitingInterval: 2,
         isVerbose: true,
-        taskId: 0
+        taskId: 0,
+
+        funcaptchaApiJSSubdomain: null,
+        funcaptchaDataBlob: null,
 
     },
     setAPIKey(key) {
@@ -246,16 +249,20 @@ module.exports = {
                 'task' : {
                     type:                   'FunCaptchaTaskProxyless',
                     websiteURL:             websiteURL,
-                    websiteKey:             websiteKey,
-                    funcaptchaApiJSSubdomain:   this.settings.funcaptchaApiJSSubdomain
+                    websitePublicKey:       websiteKey,
+                    funcaptchaApiJSSubdomain:   this.settings.funcaptchaApiJSSubdomain ? this.settings.funcaptchaApiJSSubdomain : '',
+                    data: this.settings.funcaptchaDataBlob ? JSON.stringify({
+                        blob: this.settings.funcaptchaDataBlob
+                    }) : ''
                 }
+
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
+                    resolve(solution.token)
                 })
                 .catch(err => reject(err));
         });
@@ -277,7 +284,7 @@ module.exports = {
                 'task' : {
                     type:                   'FunCaptchaTask',
                     websiteURL:             websiteURL,
-                    websiteKey:             websiteKey,
+                    websitePublicKey:       websiteKey,
                     funcaptchaApiJSSubdomain:   this.settings.funcaptchaApiJSSubdomain,
                     proxyType:              proxyType,
                     proxyAddress:           proxyAddress,
@@ -296,7 +303,7 @@ module.exports = {
                     if (solution.cookies) {
                         this.settings.cookies = solution.cookies;
                     }
-                    resolve(solution.gRecaptchaResponse)
+                    resolve(solution.token)
                 })
                 .catch(err => reject(err));
         });
