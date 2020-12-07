@@ -15,6 +15,7 @@ module.exports = {
         minLength: null,
         maxLength: null,
         languagePool: null,
+        comment: null,
 
         connectionTimeout: 20,
         firstAttemptWaitingInterval: 5,
@@ -51,6 +52,7 @@ module.exports = {
                     phrase:         this.settings.phrase,
                     case:           this.settings.case,
                     numeric:        this.settings.numeric,
+                    comment:        this.settings.comment,
                     math:           this.settings.math,
                     minLength:      this.settings.minLength,
                     maxLength:      this.settings.maxLength
