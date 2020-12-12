@@ -335,7 +335,7 @@ module.exports = {
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
+                    resolve(solution)
                 })
                 .catch(err => reject(err));
         });
@@ -382,7 +382,7 @@ module.exports = {
                     if (solution.cookies) {
                         this.settings.cookies = solution.cookies;
                     }
-                    resolve(solution.gRecaptchaResponse)
+                    resolve(solution)
                 })
                 .catch(err => reject(err));
         });
