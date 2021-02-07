@@ -43,6 +43,11 @@ Report last solved Recaptcha v2/v3 as incorrect (must read [this](https://antica
 ac.reportIncorrectRecaptcha();
 ```
 
+Report Recaptcha v3 as correctly solved (more info [here](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/1766948865/reportCorrectRecaptcha) before using):
+```javascript
+ac.reportCorrectRecaptcha();
+```
+
 
 Solve image captcha:
 ```javascript
@@ -91,9 +96,26 @@ ac.solveRecaptchaV3('http://DOMAIN.COM',
     .catch(error => console.log('test received error '+error));
 ```
 
+Solve Recaptcha V2 Enterprise without proxy:
+```javascript
+ac.solveRecaptchaV2EnterpriseProxyless(
+    'http://DOMAIN.COM', 
+    'WEBSITE_KEY', 
+    { 
+        "s" : "SOME_TOKEN",
+        "custom_parameter" : "string_number_boolean" 
+    })
+    .then(gresponse => {
+        console.log('g-response: '+gresponse);
+    })
+    .catch(error => console.log('test received error '+error));
+```
+
 Other available task types with similar method calls:
 
 ```javascript
+ac.solveRecaptchaV2EnterpriseProxyOn( ... ); //Recaptcha V2 Enterprise with proxy
+ac.solveRecaptchaV3Enterprise( ... ); //Recaptcha V3 Enterprise
 ac.solveHCaptchaProxyless( ... ); //hCaptcha without proxy
 ac.solveHCaptchaProxyOn( ... ); //hCaptcha with proxy
 ac.solveFunCaptchaProxyless( ... ); //FunCaptcha without proxy
