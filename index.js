@@ -83,7 +83,7 @@ module.exports = {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
-                    type:                   'NoCaptchaTaskProxyless',
+                    type:                   'RecaptchaV2TaskProxyless',
                     websiteURL:             websiteURL,
                     websiteKey:             websiteKey,
                     websiteSToken:          this.settings.websiteSToken,
@@ -117,7 +117,7 @@ module.exports = {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
-                    type:                   'NoCaptchaTask',
+                    type:                   'RecaptchaV2Task',
                     websiteURL:             websiteURL,
                     websiteKey:             websiteKey,
                     websiteSToken:          this.settings.websiteSToken,
@@ -169,9 +169,113 @@ module.exports = {
         });
     },
 
+    solveRecaptchaV2EnterpriseProxyless(websiteURL,
+                                        websiteKey,
+                                        enterprisePayload = null) {
+        return new Promise((resolve, reject) => {
+            let taskObject = {
+                type:                   'RecaptchaV2EnterpriseTaskProxyless',
+                websiteURL:             websiteURL,
+                websiteKey:             websiteKey
+            };
+            if (enterprisePayload) {
+                taskObject["enterprisePayload"] = enterprisePayload;
+            }
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : taskObject
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution.gRecaptchaResponse)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
+
+    solveRecaptchaV2EnterpriseProxyOn(websiteURL,
+                                      websiteKey,
+                                      enterprisePayload,
+                                      proxyType,
+                                      proxyAddress,
+                                      proxyPort,
+                                      proxyLogin,
+                                      proxyPassword,
+                                      userAgent,
+                                      cookies) {
+        return new Promise((resolve, reject) => {
+            let taskObject = {
+                type:                   'RecaptchaV2EnterpriseTaskProxyless',
+                websiteURL:             websiteURL,
+                websiteKey:             websiteKey,
+                proxyType:              proxyType,
+                proxyAddress:           proxyAddress,
+                proxyPort:              proxyPort,
+                proxyLogin:             proxyLogin,
+                proxyPassword:          proxyPassword,
+                userAgent:              userAgent,
+                cookies:                cookies
+            };
+            if (enterprisePayload) {
+                taskObject["enterprisePayload"] = enterprisePayload;
+            }
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : taskObject
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution.gRecaptchaResponse)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
+    solveRecaptchaV3Enterprise(websiteURL, websiteKey, minScore, pageAction) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'RecaptchaV3TaskProxyless',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey,
+                    minScore:               minScore,
+                    pageAction:             pageAction,
+                    isEnterprise:           true
+                }
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution.gRecaptchaResponse)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
     reportIncorrectRecaptcha() {
         return new Promise((resolve, reject) => {
             this.JSONRequest('reportIncorrectRecaptcha', {
+                'clientKey' : this.settings.clientKey,
+                'taskId': this.settings.taskId
+            })
+                .then(resolve)
+                .catch(err => reject(err));
+        });
+    },
+
+    reportCorrectRecaptcha() {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('reportCorrectRecaptcha', {
                 'clientKey' : this.settings.clientKey,
                 'taskId': this.settings.taskId
             })

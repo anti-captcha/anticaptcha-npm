@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,9 @@
     "recaptcha",
     "hcaptcha",
     "recaptchav2",
+    "recaptcha enterprise",
     "funcaptcha",
+    "arkoselabs",
     "geetest",
     "antigate",
     "2captcha",
@@ -26,6 +28,6 @@
   },
   "homepage": "https://github.com/AdminAnticaptcha/anticaptcha-npm#readme",
   "dependencies": {
-    "axios": "^0.20.0"
+    "axios": "^0.21.1"
   }
 }
