@@ -25,6 +25,25 @@ Disable verbose output to console:
 ```javascript
 ac.shutUp();
 ```
+&nbsp;
+
+
+---
+Solve image captcha:
+```javascript
+const fs = require('fs');
+const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
+ac.solveImage(captcha, true)
+    .then(text => console.log('captcha text: '+text))
+    .catch(error => console.log('test received error '+error));
+```
+Report last solved image captcha as incorrect (must read [this](https://anti-captcha.com/apidoc/methods/reportIncorrectImageCaptcha) before using):
+```javascript
+ac.reportIncorrectImageCaptcha();
+```
+---
+
+&nbsp;
 
 Solve Recaptcha V2 without proxy:
 ```javascript
@@ -38,30 +57,17 @@ ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
     .catch(error => console.log('test received error '+error));
 ```
 
-Report last solved Recaptcha v2/v3 as incorrect (must read [this](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/632193041/reportIncorrectRecaptcha+send+complaint+on+a+Recaptcha) before using):
+Report last solved Recaptcha v2/v3 as incorrect (must read [this](https://anti-captcha.com/apidoc/methods/reportIncorrectRecaptcha) before using):
 ```javascript
 ac.reportIncorrectRecaptcha();
 ```
 
-Report Recaptcha v3 as correctly solved (more info [here](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/1766948865/reportCorrectRecaptcha) before using):
+Report Recaptcha v3 as correctly solved (more info [here](https://anti-captcha.com/apidoc/methods/reportCorrectRecaptcha) before using):
 ```javascript
 ac.reportCorrectRecaptcha();
 ```
 
 
-Solve image captcha:
-```javascript
-const fs = require('fs');
-const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
-ac.solveImage(captcha, true)
-    .then(text => console.log('captcha text: '+text))
-    .catch(error => console.log('test received error '+error));
-```
-
-Report last solved image captcha as incorrect (must read [this](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/48693258/reportIncorrectImageCaptcha+send+complaint+on+an+image+captcha) before using):
-```javascript
-ac.reportIncorrectImageCaptcha();
-```
 
 
 Solve Recaptcha V2 with proxy:
@@ -69,7 +75,7 @@ Solve Recaptcha V2 with proxy:
 ac.solveRecaptchaV2ProxyOn('http://DOMAIN.COM',
     'WEBSITE_KEY',
     'http', //http, socks4, socks5
-    'PROXY_ADDRESS',
+    'PROXY_IP',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD',
@@ -77,12 +83,16 @@ ac.solveRecaptchaV2ProxyOn('http://DOMAIN.COM',
     'some=cookies') 
     .then(gresponse => {
         console.log('g-response: '+gresponse);
-        console.log('google cookies:');
-        console.log(ac.getCookies());
     })
     .catch(error => console.log('test received error '+error));
 ```
+Solve Recaptcha V2-invisible (note the 3rd parameter "true"):
+```javascript
+ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY', true)
+```
+---
 
+&nbsp;
 
 Solve Recaptcha V3:
 ```javascript
@@ -110,7 +120,47 @@ ac.solveRecaptchaV2EnterpriseProxyless(
     })
     .catch(error => console.log('test received error '+error));
 ```
+---
 
+
+&nbsp;
+
+Solve AntiGate Task:
+```javascript
+ac.solveAntiGateTask(
+    'https://anti-captcha.com/tutorials/v2-textarea', 
+    'Demo sign-in at anti-captcha.com', 
+    { 
+        "login": "some login",
+        "password": "a password" 
+    })
+    .then(solution => {
+        console.log('cookies: ', solution.cookies);
+        console.log('localStorage: ', solution.localStorage);
+        console.log('url: ', solution.url);
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+same with a proxy:
+```javascript
+ac.solveAntiGateTask(
+    'https://anti-captcha.com/tutorials/v2-textarea', 
+    'Demo sign-in at anti-captcha.com', 
+    { 
+        "login": "some login",
+        "password": "a password" 
+    },
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD')
+    .then(solution => {
+        console.log(solution);
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+
+---
 Other available task types with similar method calls:
 
 ```javascript

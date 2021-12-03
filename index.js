@@ -78,17 +78,21 @@ module.exports = {
         });
     },
 
-    solveRecaptchaV2Proxyless(websiteURL, websiteKey) {
+    solveRecaptchaV2Proxyless(websiteURL, websiteKey, isInvisible = false) {
         return new Promise((resolve, reject) => {
+            let task = {
+                type:                   'RecaptchaV2TaskProxyless',
+                websiteURL:             websiteURL,
+                websiteKey:             websiteKey,
+                websiteSToken:          this.settings.websiteSToken,
+                recaptchaDataSValue:    this.settings.recaptchaDataSValue
+            }
+            if (isInvisible === true) {
+                task['isInvisible'] = true
+            }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : {
-                    type:                   'RecaptchaV2TaskProxyless',
-                    websiteURL:             websiteURL,
-                    websiteKey:             websiteKey,
-                    websiteSToken:          this.settings.websiteSToken,
-                    recaptchaDataSValue:    this.settings.recaptchaDataSValue
-                }
+                'task'      : task
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -112,24 +116,29 @@ module.exports = {
                             proxyLogin,
                             proxyPassword,
                             userAgent,
-                            cookies) {
+                            cookies,
+                            isInvisible = false) {
         return new Promise((resolve, reject) => {
+            let task = {
+                type:                   'RecaptchaV2Task',
+                websiteURL:             websiteURL,
+                websiteKey:             websiteKey,
+                websiteSToken:          this.settings.websiteSToken,
+                recaptchaDataSValue:    this.settings.recaptchaDataSValue,
+                proxyType:              proxyType,
+                proxyAddress:           proxyAddress,
+                proxyPort:              proxyPort,
+                proxyLogin:             proxyLogin,
+                proxyPassword:          proxyPassword,
+                userAgent:              userAgent,
+                cookies:                cookies
+            };
+            if (isInvisible === true) {
+                task['isInvisible'] = true;
+            }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : {
-                    type:                   'RecaptchaV2Task',
-                    websiteURL:             websiteURL,
-                    websiteKey:             websiteKey,
-                    websiteSToken:          this.settings.websiteSToken,
-                    recaptchaDataSValue:    this.settings.recaptchaDataSValue,
-                    proxyType:              proxyType,
-                    proxyAddress:           proxyAddress,
-                    proxyPort:              proxyPort,
-                    proxyLogin:             proxyLogin,
-                    proxyPassword:          proxyPassword,
-                    userAgent:              userAgent,
-                    cookies:                cookies
-                }
+                'task' : task
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -486,6 +495,44 @@ module.exports = {
                     if (solution.cookies) {
                         this.settings.cookies = solution.cookies;
                     }
+                    resolve(solution)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
+    solveAntiGateTask(websiteURL,
+                      templateName,
+                      variables,
+                      proxyAddress,
+                      proxyPort,
+                      proxyLogin,
+                      proxyPassword) {
+        return new Promise((resolve, reject) => {
+            if (typeof templateName != "string") {
+                reject('Parameter "templateName" must be a string');
+            }
+            if (typeof variables != "object") {
+                reject('Parameter "variables" must be an object');
+            }
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'AntiGateTask',
+                    websiteURL:             websiteURL,
+                    templateName:           templateName,
+                    variables:              variables,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                }
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
                     resolve(solution)
                 })
                 .catch(err => reject(err));
