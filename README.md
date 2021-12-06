@@ -128,11 +128,14 @@ ac.solveRecaptchaV2EnterpriseProxyless(
 Solve AntiGate Task:
 ```javascript
 ac.solveAntiGateTask(
-    'https://anti-captcha.com/tutorials/v2-textarea', 
-    'Demo sign-in at anti-captcha.com', 
+    'http://antigate.com/logintest.php', 
+    'Sign-in and wait for control text', 
     { 
-        "login": "some login",
-        "password": "a password" 
+        "login_input_css": "#login",
+        "login_input_value": "the login",
+        "password_input_css": "#password",
+        "password_input_value": "the password" ,
+        "control_text": "You have been logged successfully" 
     })
     .then(solution => {
         console.log('cookies: ', solution.cookies);
