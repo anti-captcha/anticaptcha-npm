@@ -539,6 +539,19 @@ module.exports = {
         });
     },
 
+    pushAntiGateVariable(name, value) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('pushAntiGateVariable', {
+                'clientKey' : this.settings.clientKey,
+                'taskId': this.settings.taskId,
+                'name': name,
+                'value': value
+            })
+                .then(resolve)
+                .catch(err => reject(err));
+        });
+    },
+
     waitForResult(taskId) {
         return new Promise((resolve, reject) => {
 

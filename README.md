@@ -134,7 +134,7 @@ ac.solveAntiGateTask(
         "login_input_css": "#login",
         "login_input_value": "the login",
         "password_input_css": "#password",
-        "password_input_value": "the password" ,
+        "password_input_value": "the password",
         "control_text": "You have been logged successfully" 
     })
     .then(solution => {
@@ -147,11 +147,14 @@ ac.solveAntiGateTask(
 same with a proxy:
 ```javascript
 ac.solveAntiGateTask(
-    'https://anti-captcha.com/tutorials/v2-textarea', 
-    'Demo sign-in at anti-captcha.com', 
+    'http://antigate.com/logintest.php', 
+    'Sign-in and wait for control text', 
     { 
-        "login": "some login",
-        "password": "a password" 
+        "login_input_css": "#login",
+        "login_input_value": "the login",
+        "password_input_css": "#password",
+        "password_input_value": "the password",
+        "control_text": "You have been logged successfully" 
     },
     'PROXY_IP',
     'PROXY_PORT',
@@ -161,6 +164,33 @@ ac.solveAntiGateTask(
         console.log(solution);
     })
     .catch(error => console.error('test received error: ', error));
+```
+Send a task with a delayed variable and push it after a few seconds:
+```javascript
+(async() => {
+    try {
+        const taskId = await ac.sendAntiGateTask('http://antigate.com/logintest2fa.php',
+            'Sign-in with 2FA and wait for control text',
+            {
+                "login_input_css": "#login",
+                "login_input_value": "the login",
+                "password_input_css": "#password",
+                "password_input_value": "the password",
+                "2fa_input_css": "#2facode",
+                "2fa_input_value": "_WAIT_FOR_IT_",
+                "control_text": "You have been logged successfully"
+            });
+        await ac.delay(5000); //simulate a delay in 2FA retrieval
+        await ac.pushAntiGateVariable('2fa_input_value', '349001');
+        const solution = await ac.waitForResult(taskId);
+
+        console.log('solution:');
+        console.log(solution);
+
+    } catch (e) {
+        console.error('Something went wrong: '+e.toString());
+    }
+})();
 ```
 
 ---
