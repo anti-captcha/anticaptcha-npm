@@ -122,6 +122,18 @@ ac.solveRecaptchaV2EnterpriseProxyless(
 ```
 ---
 
+&nbsp;
+
+Solve HCaptcha without proxy:
+```javascript
+ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
+    .then(token => {
+        console.log('token: '+token);
+    })
+    .catch(error => console.log('test received error '+error));
+```
+
+---
 
 &nbsp;
 
@@ -199,10 +211,11 @@ Other available task types with similar method calls:
 ```javascript
 ac.solveRecaptchaV2EnterpriseProxyOn( ... ); //Recaptcha V2 Enterprise with proxy
 ac.solveRecaptchaV3Enterprise( ... ); //Recaptcha V3 Enterprise
-ac.solveHCaptchaProxyless( ... ); //hCaptcha without proxy
 ac.solveHCaptchaProxyOn( ... ); //hCaptcha with proxy
-ac.solveFunCaptchaProxyless( ... ); //FunCaptcha without proxy
-ac.solveFunCaptchaProxyOn( ... ); //FunCaptcha with proxy
-ac.solveGeeTestProxyless( ... ); //Geetest without proxy
-ac.solveGeeTestProxyOn( ... ); //Geetest with proxy
+ac.solveFunCaptchaProxyless( ... ); //Solve FunCaptcha Arkoselabs without proxy
+ac.solveFunCaptchaProxyOn( ... ); //Solve FunCaptcha Arkoselabs  with proxy
+ac.solveGeeTestProxyless( ... ); //Solve Geetest without proxy
+ac.solveGeeTestProxyOn( ... ); //Solve Geetest with proxy
+ac.solveGeeTestV4Proxyless( ... ); //Bypass Geetest V4 without proxy
+ac.solveGeeTestV4ProxyOn( ... ); //Bypass Geetest V4 with proxy
 ```

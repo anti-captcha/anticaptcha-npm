@@ -455,6 +455,33 @@ module.exports = {
     },
 
 
+    solveGeeTestV4Proxyless(websiteURL,
+                          captchaId,
+                          apiSubdomain,
+                          initParameters) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                       'GeeTestTaskProxyless',
+                    websiteURL:                 websiteURL,
+                    gt:                         captchaId,
+                    geetestApiServerSubdomain:  apiSubdomain,
+                    version:                    4,
+                    initParameters:             initParameters,
+                }
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
     solveGeeTestProxyOn(websiteURL,
                            gt,
                            challenge,
@@ -478,6 +505,50 @@ module.exports = {
                     geetestApiServerSubdomain:  apiSubdomain,
                     geetestGetLib:              getLib,
 
+                    proxyType:              proxyType,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword,
+                    userAgent:              userAgent,
+                    cookies:                cookies
+                }
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    if (solution.cookies) {
+                        this.settings.cookies = solution.cookies;
+                    }
+                    resolve(solution)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
+    solveGeeTestV4ProxyOn(websiteURL,
+                          captchaId,
+                          apiSubdomain,
+                          initParameters,
+                          proxyType,
+                          proxyAddress,
+                          proxyPort,
+                          proxyLogin,
+                          proxyPassword,
+                          userAgent,
+                          cookies) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                       'GeeTestTask',
+                    websiteURL:                 websiteURL,
+                    gt:                         captchaId,
+                    geetestApiServerSubdomain:  apiSubdomain,
+                    version:                    4,
+                    initParameters:             initParameters,
                     proxyType:              proxyType,
                     proxyAddress:           proxyAddress,
                     proxyPort:              proxyPort,
