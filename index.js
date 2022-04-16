@@ -294,7 +294,7 @@ module.exports = {
     },
 
 
-    solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload) {
+    solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload, isInvisible) {
         if (typeof userAgent === "undefined") userAgent = '';
         let taskPayLoad = {
             type:                   'HCaptchaTaskProxyless',
@@ -303,6 +303,9 @@ module.exports = {
             userAgent:              userAgent
         }
         if (typeof enterprisePayload === "object") taskPayLoad['enterprisePayload'] = enterprisePayload;
+        if (typeof isInvisible === "boolean") {
+            if (isInvisible === true) taskPayLoad['isInvisible'] = true;
+        }
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -329,7 +332,8 @@ module.exports = {
                             proxyPassword,
                             userAgent,
                             cookies,
-                            enterprisePayload) {
+                            enterprisePayload,
+                            isInvisible) {
         let taskPayLoad = {
             type:                   'HCaptchaTask',
             websiteURL:             websiteURL,
@@ -343,6 +347,9 @@ module.exports = {
             cookies:                cookies
         };
         if (typeof enterprisePayload === "object") taskPayLoad['enterprisePayload'] = enterprisePayload;
+        if (typeof isInvisible === "boolean") {
+            if (isInvisible === true) taskPayLoad['isInvisible'] = true;
+        }
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
