@@ -1,10 +1,12 @@
 ## Official Anti-Captcha.com npm module ##
 
-Official anti-captcha.com npm package for solving images with text, Recaptcha v2/v3, Funcaptcha and GeeTest.
+Official anti-captcha.com npm package for solving images with text, Recaptcha v2/v3 Enterprise/non-Enterpise, Funcaptcha, GeeTest, HCaptcha Enterprise/non-Enterprise.
 
-[Anti-captcha](http://anti-captcha.com) is an oldest and cheapest web service dedicated to solving captchas by human workers from around the world. By solving captchas with us you help people in poorest regions of the world to earn money, which not only cover their basic needs, but also gives them ability to financially help their families, study and avoid jobs where they're simply not happy.
+[Anti-captcha](https://anti-captcha.com) is an oldest and cheapest web service dedicated to solving captchas by human workers from around the world. By solving captchas with us you help people in poorest regions of the world to earn money, which not only cover their basic needs, but also gives them ability to financially help their families, study and avoid jobs where they're simply not happy.
 
-To use the service you need to [register](http://anti-captcha.com/clients/) and topup your balance. Prices start from $0.0005 per image captcha and $0.002 for Recaptcha. That's $0.5 per 1000 for images and $2 for 1000 Recaptchas.
+To use the service you need to [register](https://anti-captcha.com/clients/) and topup your balance. Prices start from $0.0005 per image captcha and $0.002 for Recaptcha. That's $0.5 per 1000 for images and $2 for 1000 Recaptchas.
+
+For more technical information and articles visit our [documentation](https://anti-captcha.com/apidoc) page. 
 
 Module installation:
 ```bash
@@ -56,6 +58,8 @@ ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
     })
     .catch(error => console.log('test received error '+error));
 ```
+Learn what to do with g-response in [this](https://anti-captcha.com/apidoc/articles/how-to-use-g-response) article.
+
 
 Report last solved Recaptcha v2/v3 as incorrect (must read [this](https://anti-captcha.com/apidoc/methods/reportIncorrectRecaptcha) before using):
 ```javascript
@@ -126,7 +130,27 @@ ac.solveRecaptchaV2EnterpriseProxyless(
 
 Solve HCaptcha without proxy:
 ```javascript
-ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
+ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'FULL USER AGENT HERE')
+    .then(token => {
+        console.log('token: '+token);
+    })
+    .catch(error => console.log('test received error '+error));
+```
+
+---
+&nbsp;
+
+Solve HCaptcha Enterprise without proxy:
+```javascript
+ac.solveHCaptchaProxyless('http://DOMAIN.COM', 
+    'WEBSITE_KEY', 
+    'FULL USER AGENT HERE',
+    {
+        'rqdata': 'rqdata from target website',
+        'sentry': true,
+        // set here parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
+        // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
+    })
     .then(token => {
         console.log('token: '+token);
     })

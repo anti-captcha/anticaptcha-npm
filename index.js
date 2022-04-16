@@ -294,15 +294,19 @@ module.exports = {
     },
 
 
-    solveHCaptchaProxyless(websiteURL, websiteKey) {
+    solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload) {
+        if (typeof userAgent === "undefined") userAgent = '';
+        let taskPayLoad = {
+            type:                   'HCaptchaTaskProxyless',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            userAgent:              userAgent
+        }
+        if (typeof enterprisePayload === "object") taskPayLoad['enterprisePayload'] = enterprisePayload;
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : {
-                    type:                   'HCaptchaTaskProxyless',
-                    websiteURL:             websiteURL,
-                    websiteKey:             websiteKey
-                }
+                'task' :  taskPayLoad
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -324,22 +328,25 @@ module.exports = {
                             proxyLogin,
                             proxyPassword,
                             userAgent,
-                            cookies) {
+                            cookies,
+                            enterprisePayload) {
+        let taskPayLoad = {
+            type:                   'HCaptchaTask',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            proxyType:              proxyType,
+            proxyAddress:           proxyAddress,
+            proxyPort:              proxyPort,
+            proxyLogin:             proxyLogin,
+            proxyPassword:          proxyPassword,
+            userAgent:              userAgent,
+            cookies:                cookies
+        };
+        if (typeof enterprisePayload === "object") taskPayLoad['enterprisePayload'] = enterprisePayload;
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : {
-                    type:                   'HCaptchaTask',
-                    websiteURL:             websiteURL,
-                    websiteKey:             websiteKey,
-                    proxyType:              proxyType,
-                    proxyAddress:           proxyAddress,
-                    proxyPort:              proxyPort,
-                    proxyLogin:             proxyLogin,
-                    proxyPassword:          proxyPassword,
-                    userAgent:              userAgent,
-                    cookies:                cookies
-                }
+                'task' : taskPayLoad
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
