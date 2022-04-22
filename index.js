@@ -370,6 +370,18 @@ module.exports = {
     },
 
 
+    reportIncorrectHcaptcha() {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('reportIncorrectHcaptcha', {
+                'clientKey' : this.settings.clientKey,
+                'taskId': this.settings.taskId
+            })
+                .then(resolve)
+                .catch(err => reject(err));
+        });
+    },
+
+
 
     solveFunCaptchaProxyless(websiteURL, websiteKey) {
         return new Promise((resolve, reject) => {

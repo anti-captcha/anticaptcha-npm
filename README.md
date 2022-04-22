@@ -136,7 +136,10 @@ ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'FULL USER AGENT H
     })
     .catch(error => console.log('test received error '+error));
 ```
-
+Report last solved Hcaptcha as incorrect:
+```javascript
+ac.reportIncorrectHcaptcha();
+```
 ---
 &nbsp;
 
