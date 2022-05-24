@@ -604,13 +604,17 @@ module.exports = {
                       proxyAddress,
                       proxyPort,
                       proxyLogin,
-                      proxyPassword) {
+                      proxyPassword,
+                      domainsOfInterest) {
         return new Promise((resolve, reject) => {
             if (typeof templateName != "string") {
                 reject('Parameter "templateName" must be a string');
             }
             if (typeof variables != "object") {
                 reject('Parameter "variables" must be an object');
+            }
+            if (typeof domainsOfInterest != "object") {
+                domainsOfInterest = [];
             }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -622,7 +626,8 @@ module.exports = {
                     proxyAddress:           proxyAddress,
                     proxyPort:              proxyPort,
                     proxyLogin:             proxyLogin,
-                    proxyPassword:          proxyPassword
+                    proxyPassword:          proxyPassword,
+                    domainsOfInterest:      domainsOfInterest
                 }
             })
                 .then(res => {
