@@ -26,12 +26,19 @@ module.exports = {
         funcaptchaApiJSSubdomain: null,
         funcaptchaDataBlob: null,
 
+        softId: 0
+
     },
     setAPIKey(key) {
         this.settings.clientKey = key;
     },
     shutUp() {
         this.settings.isVerbose = false;
+    },
+    //Specify softId to earn 10% commission with your app.
+    //Get your softId here: https://anti-captcha.com/clients/tools/devcenter
+    setSoftId(softId) {
+        this.settings.softId = softId;
     },
     getBalance() {
         return new Promise((resolve, reject) => {
@@ -57,7 +64,8 @@ module.exports = {
                     minLength:      this.settings.minLength,
                     maxLength:      this.settings.maxLength
                 },
-                'languagePool' : this.settings.languagePool
+                'languagePool' : this.settings.languagePool,
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -92,7 +100,8 @@ module.exports = {
             }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task'      : task
+                'task'      : task,
+                'softId'    : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -138,7 +147,8 @@ module.exports = {
             }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : task
+                'task'      : task,
+                'softId'    : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -165,7 +175,8 @@ module.exports = {
                     websiteKey:             websiteKey,
                     minScore:               minScore,
                     pageAction:             pageAction
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -192,7 +203,8 @@ module.exports = {
             }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : taskObject
+                'task' : taskObject,
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -234,7 +246,8 @@ module.exports = {
             }
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : taskObject
+                'task' : taskObject,
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -258,7 +271,8 @@ module.exports = {
                     minScore:               minScore,
                     pageAction:             pageAction,
                     isEnterprise:           true
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -309,7 +323,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' :  taskPayLoad
+                'task' :  taskPayLoad,
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -353,7 +368,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
-                'task' : taskPayLoad
+                'task' : taskPayLoad,
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -395,7 +411,8 @@ module.exports = {
                     data: this.settings.funcaptchaDataBlob ? JSON.stringify({
                         blob: this.settings.funcaptchaDataBlob
                     }) : ''
-                }
+                },
+                'softId' : this.settings.softId
 
             })
                 .then(res => {
@@ -434,7 +451,8 @@ module.exports = {
                     proxyPassword:          proxyPassword,
                     userAgent:              userAgent,
                     cookies:                cookies
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -467,7 +485,8 @@ module.exports = {
                     challenge:                  challenge,
                     geetestApiServerSubdomain:  apiSubdomain,
                     geetestGetLib:              getLib,
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -495,7 +514,8 @@ module.exports = {
                     geetestApiServerSubdomain:  apiSubdomain,
                     version:                    4,
                     initParameters:             initParameters,
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -538,7 +558,8 @@ module.exports = {
                     proxyPassword:          proxyPassword,
                     userAgent:              userAgent,
                     cookies:                cookies
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -582,7 +603,8 @@ module.exports = {
                     proxyPassword:          proxyPassword,
                     userAgent:              userAgent,
                     cookies:                cookies
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;
@@ -628,7 +650,8 @@ module.exports = {
                     proxyLogin:             proxyLogin,
                     proxyPassword:          proxyPassword,
                     domainsOfInterest:      domainsOfInterest
-                }
+                },
+                'softId' : this.settings.softId
             })
                 .then(res => {
                     this.settings.taskId = res.taskId;

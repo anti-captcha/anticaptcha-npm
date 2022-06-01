@@ -27,6 +27,12 @@ Disable verbose output to console:
 ```javascript
 ac.shutUp();
 ```
+
+Specify softId to earn __10% commission__ from all captcha spendings with your app.
+Get your softId in [Developers Center](https://anti-captcha.com/clients/tools/devcenter).
+```javascript
+ac.setSoftId(SOFT_ID_NUMBER);
+```
 &nbsp;
 
 
