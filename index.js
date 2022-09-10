@@ -230,7 +230,7 @@ module.exports = {
                                       cookies) {
         return new Promise((resolve, reject) => {
             let taskObject = {
-                type:                   'RecaptchaV2EnterpriseTaskProxyless',
+                type:                   'RecaptchaV2EnterpriseTask',
                 websiteURL:             websiteURL,
                 websiteKey:             websiteKey,
                 proxyType:              proxyType,
