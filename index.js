@@ -443,7 +443,10 @@ module.exports = {
                     type:                   'FunCaptchaTask',
                     websiteURL:             websiteURL,
                     websitePublicKey:       websiteKey,
-                    funcaptchaApiJSSubdomain:   this.settings.funcaptchaApiJSSubdomain,
+                    funcaptchaApiJSSubdomain:   this.settings.funcaptchaApiJSSubdomain ? this.settings.funcaptchaApiJSSubdomain : '',
+                    data: this.settings.funcaptchaDataBlob ? JSON.stringify({
+                        blob: this.settings.funcaptchaDataBlob
+                    }) : '',
                     proxyType:              proxyType,
                     proxyAddress:           proxyAddress,
                     proxyPort:              proxyPort,
