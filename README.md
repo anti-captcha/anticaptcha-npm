@@ -170,6 +170,34 @@ ac.solveHCaptchaProxyless('http://DOMAIN.COM',
 
 &nbsp;
 
+Solve Turnstile without proxy:
+```javascript
+ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
+    .then(token => {
+        console.log('token: '+token);
+    })
+    .catch(error => console.log('test received error '+error));
+```
+---
+&nbsp;
+
+Solve Turnstile with proxy:
+```javascript
+ac.solveTurnstileProxyOn('http://DOMAIN.COM',
+    'WEBSITE_KEY',
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD')
+    .then(token => {
+        console.log('token: '+token);
+    })
+    .catch(error => console.log('test received error '+error));
+```
+---
+&nbsp;
+
 Solve AntiGate Task:
 ```javascript
 ac.solveAntiGateTask(

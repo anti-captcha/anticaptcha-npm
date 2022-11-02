@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,8 @@
     "funcaptcha",
     "arkoselabs",
     "geetest",
+    "turnstile",
+    "turnstile captcha",
     "antigate",
     "2captcha",
     "decaptcher",

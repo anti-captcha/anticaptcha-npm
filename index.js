@@ -623,6 +623,66 @@ module.exports = {
         });
     },
 
+
+    solveTurnstileProxyless(websiteURL, websiteKey) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  {
+                    type:                   'TurnstileTaskProxyless',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey
+                },
+                'softId' : this.settings.softId
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution.token)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
+
+    solveTurnstileProxyOn(websiteURL,
+                            websiteKey,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword) {
+        return new Promise((resolve, reject) => {
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'TurnstileTask',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey,
+                    proxyType:              proxyType,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                },
+                'softId' : this.settings.softId
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    if (solution.cookies) {
+                        this.settings.cookies = solution.cookies;
+                    }
+                    resolve(solution.token)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
     solveAntiGateTask(websiteURL,
                       templateName,
                       variables,
