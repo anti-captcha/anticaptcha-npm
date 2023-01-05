@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,11 @@
     "antigate",
     "2captcha",
     "decaptcher",
-    "deathbycaptcha"
+    "deathbycaptcha",
+    "cloudflare",
+    "cloudflare bypass",
+    "datadome",
+    "datadome bypass"
   ],
   "author": "Anti Admin",
   "license": "ISC",

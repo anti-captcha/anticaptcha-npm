@@ -266,6 +266,26 @@ Send a task with a delayed variable and push it after a few seconds:
 })();
 ```
 
+
+&nbsp;
+
+Bypass Cloudflare / Datadome Task:
+```javascript
+ac.solveAntiBotCookieTask(
+    'https://www.thewebsite.com/', 
+    'cloudflare', //or "datadome" 
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD')
+    .then(solution => {
+        console.log(solution);
+        //use solution.fingerprint['self.navigator.userAgent'] as user-agent for your requests
+        //use solution.cookies for your requests
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+
 ---
 Other available task types with similar method calls:
 

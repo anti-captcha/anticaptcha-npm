@@ -740,6 +740,40 @@ module.exports = {
         });
     },
 
+    solveAntiBotCookieTask(websiteURL,
+                      providerName,
+                      proxyAddress,
+                      proxyPort,
+                      proxyLogin,
+                      proxyPassword) {
+        return new Promise((resolve, reject) => {
+            if (typeof providerName != "string") {
+                reject('Parameter "providerName" must be a string');
+            }
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'AntiBotCookieTask',
+                    websiteURL:             websiteURL,
+                    providerName:           providerName,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                },
+                'softId' : this.settings.softId
+            })
+                .then(res => {
+                    this.settings.taskId = res.taskId;
+                    return this.waitForResult(res.taskId);
+                })
+                .then(solution => {
+                    resolve(solution)
+                })
+                .catch(err => reject(err));
+        });
+    },
+
     waitForResult(taskId) {
         return new Promise((resolve, reject) => {
 
