@@ -269,11 +269,10 @@ Send a task with a delayed variable and push it after a few seconds:
 
 &nbsp;
 
-Bypass Cloudflare / Datadome Task:
+Bypass Cloudflare / Datadome / etc:
 ```javascript
 ac.solveAntiBotCookieTask(
     'https://www.thewebsite.com/', 
-    'cloudflare', //or "datadome" 
     'PROXY_IP',
     'PROXY_PORT',
     'PROXY_LOGIN',
