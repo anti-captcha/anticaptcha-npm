@@ -139,6 +139,7 @@ Solve HCaptcha without proxy:
 ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'FULL USER AGENT HERE')
     .then(token => {
         console.log('token: '+token);
+        console.log('user-agent: ', ac.getHcaptchaUserAgent())
     })
     .catch(error => console.log('test received error '+error));
 ```
@@ -162,6 +163,37 @@ ac.solveHCaptchaProxyless('http://DOMAIN.COM',
     })
     .then(token => {
         console.log('token: '+token);
+        console.log('user-agent: ', ac.getHcaptchaUserAgent())
+    })
+    .catch(error => console.log('test received error '+error));
+```
+
+---
+&nbsp;
+
+Solve HCaptcha Enterprise with proxy:
+```javascript
+ac.solveHCaptchaProxyless('http://DOMAIN.COM', 
+    'WEBSITE_KEY', 
+    'FULL USER AGENT HERE',
+    'http',
+    '1.2.3.4',
+    3128,
+    'proxy-login',
+    'proxy-password',
+    '',
+    '',
+    {
+        'rqdata': 'rqdata from target website',
+        'sentry': true,
+        // set here parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
+        // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
+    })
+    .then(token => {
+        //use token to submit at the target website
+        console.log('token: '+token);
+        //set this user-agent to your app library or browser
+        console.log('user-agent: ', ac.getHcaptchaUserAgent());
     })
     .catch(error => console.log('test received error '+error));
 ```

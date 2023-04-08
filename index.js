@@ -26,7 +26,9 @@ module.exports = {
         funcaptchaApiJSSubdomain: null,
         funcaptchaDataBlob: null,
 
-        softId: 0
+        softId: 0,
+
+        hcaptchaUserAgent: null
 
     },
     setAPIKey(key) {
@@ -331,6 +333,9 @@ module.exports = {
                     return this.waitForResult(res.taskId);
                 })
                 .then(solution => {
+                    if (solution.userAgent) {
+                        this.settings.hcaptchaUserAgent = solution.userAgent;
+                    }
                     resolve(solution.gRecaptchaResponse)
                 })
                 .catch(err => reject(err));
@@ -378,6 +383,9 @@ module.exports = {
                 .then(solution => {
                     if (solution.cookies) {
                         this.settings.cookies = solution.cookies;
+                    }
+                    if (solution.userAgent) {
+                        this.settings.hcaptchaUserAgent = solution.userAgent;
                     }
                     resolve(solution.gRecaptchaResponse)
                 })
@@ -859,6 +867,9 @@ module.exports = {
     },
     getCookies() {
         return this.settings.cookies;
+    },
+    getHcaptchaUserAgent() {
+        return this.settings.hcaptchaUserAgent;
     },
     delay(time) {
         return new Promise(function(resolve) {
