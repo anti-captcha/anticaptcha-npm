@@ -204,7 +204,7 @@ ac.solveHCaptchaProxyless('http://DOMAIN.COM',
 
 Solve Turnstile without proxy:
 ```javascript
-ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY')
+ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'optional_action')
     .then(token => {
         console.log('token: '+token);
     })
@@ -221,7 +221,8 @@ ac.solveTurnstileProxyOn('http://DOMAIN.COM',
     'PROXY_IP',
     'PROXY_PORT',
     'PROXY_LOGIN',
-    'PROXY_PASSWORD')
+    'PROXY_PASSWORD',
+    'optional_action')
     .then(token => {
         console.log('token: '+token);
     })

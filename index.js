@@ -632,14 +632,15 @@ module.exports = {
     },
 
 
-    solveTurnstileProxyless(websiteURL, websiteKey) {
+    solveTurnstileProxyless(websiteURL, websiteKey, action = "") {
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' :  {
                     type:                   'TurnstileTaskProxyless',
                     websiteURL:             websiteURL,
-                    websiteKey:             websiteKey
+                    websiteKey:             websiteKey,
+                    action:                 action
                 },
                 'softId' : this.settings.softId
             })
@@ -661,7 +662,8 @@ module.exports = {
                             proxyAddress,
                             proxyPort,
                             proxyLogin,
-                            proxyPassword) {
+                            proxyPassword,
+                            action = "") {
         return new Promise((resolve, reject) => {
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -669,6 +671,7 @@ module.exports = {
                     type:                   'TurnstileTask',
                     websiteURL:             websiteURL,
                     websiteKey:             websiteKey,
+                    action:                 action,
                     proxyType:              proxyType,
                     proxyAddress:           proxyAddress,
                     proxyPort:              proxyPort,
