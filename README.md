@@ -10,7 +10,7 @@ For more technical information and articles visit our [documentation](https://an
 
 Module installation:
 ```bash
-npm -i @antiadmin/anticaptchaofficial
+npm install @antiadmin/anticaptchaofficial
 ```
 
 Import and check your balance:
@@ -318,6 +318,80 @@ ac.solveAntiBotCookieTask(
     .catch(error => console.error('test received error: ', error));
 ```
 
+
+
+&nbsp;
+
+Bypass Funcaptcha / Arkoselabs without proxy:
+```javascript
+//optional data blob:
+ac.settings.funcaptchaDataBlob = 'blob value here is any, or leave it empty';
+ac.solveFunCaptchaProxyless(
+    'https://www.thewebsite.com/path',
+    'site-key')
+    .then(token => {
+            console.log(token);
+        })
+    .catch(error => console.error('test received error: ', error));
+```
+&nbsp;
+
+
+Bypass Funcaptcha / Arkoselabs via proxy:
+```javascript
+//optional data blob:
+ac.settings.funcaptchaDataBlob = 'blob value here is any, or leave it empty';
+ac.solveFunCaptchaProxyOn(
+    'https://www.thewebsite.com/path',
+    'site-key', 
+    'http',
+    '1.2.3.4',
+    3128,
+    'proxy-login',
+    'proxy-password',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116',
+    '')
+    .then(token => {
+        console.log(token);
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+
+
+
+&nbsp;
+
+
+Bypass Geetest version 3 without proxy. [See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
+```javascript
+ac.solveGeeTestProxyless(
+    'https://www.thewebsite.com/path',
+    'gt key 32 bytes',
+    'challenge value 32 bytes',
+    'optional.api-domain.com')
+    .then(token => {
+        console.log(token);
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+
+&nbsp;
+
+Bypass Geetest version 4 without proxy. [See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
+```javascript
+ac.solveGeeTestV4Proxyless(
+    'https://www.thewebsite.com/path',
+    'captchaId key 32 bytes',
+    'optional.api-domain.com',
+    {
+        'riskType': 'slide' //example
+    })
+    .then(token => {
+        console.log(token);
+    })
+    .catch(error => console.error('test received error: ', error));
+```
+
 ---
 Other available task types with similar method calls:
 
@@ -325,10 +399,6 @@ Other available task types with similar method calls:
 ac.solveRecaptchaV2EnterpriseProxyOn( ... ); //Recaptcha V2 Enterprise with proxy
 ac.solveRecaptchaV3Enterprise( ... ); //Recaptcha V3 Enterprise
 ac.solveHCaptchaProxyOn( ... ); //hCaptcha with proxy
-ac.solveFunCaptchaProxyless( ... ); //Solve FunCaptcha Arkoselabs without proxy
-ac.solveFunCaptchaProxyOn( ... ); //Solve FunCaptcha Arkoselabs  with proxy
-ac.solveGeeTestProxyless( ... ); //Solve Geetest without proxy
 ac.solveGeeTestProxyOn( ... ); //Solve Geetest with proxy
-ac.solveGeeTestV4Proxyless( ... ); //Bypass Geetest V4 without proxy
 ac.solveGeeTestV4ProxyOn( ... ); //Bypass Geetest V4 with proxy
 ```
