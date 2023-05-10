@@ -42,17 +42,14 @@ module.exports = {
     setSoftId(softId) {
         this.settings.softId = softId;
     },
-    getBalance() {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('getBalance', {
-               'clientKey' : this.settings.clientKey
-            })
-                .then(res => resolve(res.balance))
-                .catch(err => reject(err));
+    async getBalance() {
+        const response = await this.JSONRequest('getBalance', {
+            'clientKey' : this.settings.clientKey
         });
+        return response.balance;
     },
-    solveImage(body) {
-        return new Promise((resolve, reject) => {
+    async solveImage(body) {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -68,58 +65,53 @@ module.exports = {
                 },
                 'languagePool' : this.settings.languagePool,
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => resolve(solution.text))
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.text;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
-    reportIncorrectImageCaptcha() {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('reportIncorrectImageCaptcha', {
+    async reportIncorrectImageCaptcha() {
+        await this.JSONRequest('reportIncorrectImageCaptcha', {
                 'clientKey' : this.settings.clientKey,
                 'taskId': this.settings.taskId
             })
-                .then(resolve)
-                .catch(err => reject(err));
-        });
+        return true;
     },
 
-    solveRecaptchaV2Proxyless(websiteURL, websiteKey, isInvisible = false) {
-        return new Promise((resolve, reject) => {
-            let task = {
-                type:                   'RecaptchaV2TaskProxyless',
-                websiteURL:             websiteURL,
-                websiteKey:             websiteKey,
-                websiteSToken:          this.settings.websiteSToken,
-                recaptchaDataSValue:    this.settings.recaptchaDataSValue
-            }
-            if (isInvisible === true) {
-                task['isInvisible'] = true
-            }
-            this.JSONRequest('createTask', {
+    async solveRecaptchaV2Proxyless(websiteURL, websiteKey, isInvisible = false) {
+        const task = {
+            type:                   'RecaptchaV2TaskProxyless',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            websiteSToken:          this.settings.websiteSToken,
+            recaptchaDataSValue:    this.settings.recaptchaDataSValue
+        }
+        if (isInvisible === true) {
+            task['isInvisible'] = true
+        }
+        const taskCreateResult =
+            await this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task'      : task,
                 'softId'    : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.cookies) {
+                this.settings.cookies = solution.cookies;
+            }
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveRecaptchaV2ProxyOn(websiteURL,
+    async solveRecaptchaV2ProxyOn(websiteURL,
                             websiteKey,
                             proxyType,
                             proxyAddress,
@@ -129,46 +121,45 @@ module.exports = {
                             userAgent,
                             cookies,
                             isInvisible = false) {
-        return new Promise((resolve, reject) => {
-            let task = {
-                type:                   'RecaptchaV2Task',
-                websiteURL:             websiteURL,
-                websiteKey:             websiteKey,
-                websiteSToken:          this.settings.websiteSToken,
-                recaptchaDataSValue:    this.settings.recaptchaDataSValue,
-                proxyType:              proxyType,
-                proxyAddress:           proxyAddress,
-                proxyPort:              proxyPort,
-                proxyLogin:             proxyLogin,
-                proxyPassword:          proxyPassword,
-                userAgent:              userAgent,
-                cookies:                cookies
-            };
-            if (isInvisible === true) {
-                task['isInvisible'] = true;
-            }
+
+        const task = {
+            type:                   'RecaptchaV2Task',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            websiteSToken:          this.settings.websiteSToken,
+            recaptchaDataSValue:    this.settings.recaptchaDataSValue,
+            proxyType:              proxyType,
+            proxyAddress:           proxyAddress,
+            proxyPort:              proxyPort,
+            proxyLogin:             proxyLogin,
+            proxyPassword:          proxyPassword,
+            userAgent:              userAgent,
+            cookies:                cookies
+        };
+        if (isInvisible === true) {
+            task['isInvisible'] = true;
+        }
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task'      : task,
                 'softId'    : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.cookies) {
+                this.settings.cookies = solution.cookies;
+            }
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
 
-    solveRecaptchaV3(websiteURL, websiteKey, minScore, pageAction) {
-        return new Promise((resolve, reject) => {
+    async solveRecaptchaV3(websiteURL, websiteKey, minScore, pageAction) {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -179,48 +170,45 @@ module.exports = {
                     pageAction:             pageAction
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveRecaptchaV2EnterpriseProxyless(websiteURL,
+    async solveRecaptchaV2EnterpriseProxyless(websiteURL,
                                         websiteKey,
                                         enterprisePayload = null) {
-        return new Promise((resolve, reject) => {
-            let taskObject = {
-                type:                   'RecaptchaV2EnterpriseTaskProxyless',
-                websiteURL:             websiteURL,
-                websiteKey:             websiteKey
-            };
-            if (enterprisePayload) {
-                taskObject["enterprisePayload"] = enterprisePayload;
-            }
+
+        const taskObject = {
+            type:                   'RecaptchaV2EnterpriseTaskProxyless',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey
+        };
+        if (enterprisePayload) {
+            taskObject["enterprisePayload"] = enterprisePayload;
+        }
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : taskObject,
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
 
-    solveRecaptchaV2EnterpriseProxyOn(websiteURL,
+    async solveRecaptchaV2EnterpriseProxyOn(websiteURL,
                                       websiteKey,
                                       enterprisePayload,
                                       proxyType,
@@ -230,40 +218,38 @@ module.exports = {
                                       proxyPassword,
                                       userAgent,
                                       cookies) {
-        return new Promise((resolve, reject) => {
-            let taskObject = {
-                type:                   'RecaptchaV2EnterpriseTask',
-                websiteURL:             websiteURL,
-                websiteKey:             websiteKey,
-                proxyType:              proxyType,
-                proxyAddress:           proxyAddress,
-                proxyPort:              proxyPort,
-                proxyLogin:             proxyLogin,
-                proxyPassword:          proxyPassword,
-                userAgent:              userAgent,
-                cookies:                cookies
-            };
-            if (enterprisePayload) {
-                taskObject["enterprisePayload"] = enterprisePayload;
-            }
+        const taskObject = {
+            type:                   'RecaptchaV2EnterpriseTask',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            proxyType:              proxyType,
+            proxyAddress:           proxyAddress,
+            proxyPort:              proxyPort,
+            proxyLogin:             proxyLogin,
+            proxyPassword:          proxyPassword,
+            userAgent:              userAgent,
+            cookies:                cookies
+        };
+        if (enterprisePayload) {
+            taskObject["enterprisePayload"] = enterprisePayload;
+        }
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : taskObject,
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveRecaptchaV3Enterprise(websiteURL, websiteKey, minScore, pageAction) {
-        return new Promise((resolve, reject) => {
+    async solveRecaptchaV3Enterprise(websiteURL, websiteKey, minScore, pageAction) {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -275,44 +261,39 @@ module.exports = {
                     isEnterprise:           true
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.cookies) {
+                this.settings.cookies = solution.cookies;
+            }
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    reportIncorrectRecaptcha() {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('reportIncorrectRecaptcha', {
+    async reportIncorrectRecaptcha() {
+        await this.JSONRequest('reportIncorrectRecaptcha', {
                 'clientKey' : this.settings.clientKey,
                 'taskId': this.settings.taskId
             })
-                .then(resolve)
-                .catch(err => reject(err));
-        });
+        return true;
     },
 
-    reportCorrectRecaptcha() {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('reportCorrectRecaptcha', {
-                'clientKey' : this.settings.clientKey,
-                'taskId': this.settings.taskId
-            })
-                .then(resolve)
-                .catch(err => reject(err));
+    async reportCorrectRecaptcha() {
+        await this.JSONRequest('reportCorrectRecaptcha', {
+            'clientKey' : this.settings.clientKey,
+            'taskId': this.settings.taskId
         });
+        return true;
     },
 
 
-    solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload, isInvisible) {
+    async solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload, isInvisible) {
         if (typeof userAgent === "undefined") userAgent = '';
-        let taskPayLoad = {
+        const taskPayLoad = {
             type:                   'HCaptchaTaskProxyless',
             websiteURL:             websiteURL,
             websiteKey:             websiteKey,
@@ -322,28 +303,25 @@ module.exports = {
         if (typeof isInvisible === "boolean") {
             if (isInvisible === true) taskPayLoad['isInvisible'] = true;
         }
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' :  taskPayLoad,
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.userAgent) {
-                        this.settings.hcaptchaUserAgent = solution.userAgent;
-                    }
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.settings.hcaptchaUserAgent = solution.userAgent;
+            }
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-
-    solveHCaptchaProxyOn(websiteURL,
+    async solveHCaptchaProxyOn(websiteURL,
                             websiteKey,
                             proxyType,
                             proxyAddress,
@@ -354,7 +332,7 @@ module.exports = {
                             cookies,
                             enterprisePayload,
                             isInvisible) {
-        let taskPayLoad = {
+        const taskPayLoad = {
             type:                   'HCaptchaTask',
             websiteURL:             websiteURL,
             websiteKey:             websiteKey,
@@ -370,45 +348,35 @@ module.exports = {
         if (typeof isInvisible === "boolean") {
             if (isInvisible === true) taskPayLoad['isInvisible'] = true;
         }
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : taskPayLoad,
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    if (solution.userAgent) {
-                        this.settings.hcaptchaUserAgent = solution.userAgent;
-                    }
-                    resolve(solution.gRecaptchaResponse)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.settings.hcaptchaUserAgent = solution.userAgent;
+            }
+            return solution.gRecaptchaResponse;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
 
-    reportIncorrectHcaptcha() {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('reportIncorrectHcaptcha', {
+    async reportIncorrectHcaptcha() {
+        await this.JSONRequest('reportIncorrectHcaptcha', {
                 'clientKey' : this.settings.clientKey,
                 'taskId': this.settings.taskId
-            })
-                .then(resolve)
-                .catch(err => reject(err));
-        });
+            });
+        return true;
     },
 
-
-
-    solveFunCaptchaProxyless(websiteURL, websiteKey) {
-        return new Promise((resolve, reject) => {
+    async solveFunCaptchaProxyless(websiteURL, websiteKey) {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -421,21 +389,17 @@ module.exports = {
                     }) : ''
                 },
                 'softId' : this.settings.softId
-
             })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.token)
-                })
-                .catch(err => reject(err));
-        });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-
-    solveFunCaptchaProxyOn(websiteURL,
+    async solveFunCaptchaProxyOn(websiteURL,
                          websiteKey,
                          proxyType,
                          proxyAddress,
@@ -444,7 +408,7 @@ module.exports = {
                          proxyPassword,
                          userAgent,
                          cookies) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -464,29 +428,24 @@ module.exports = {
                     cookies:                cookies
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution.token)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
 
 
-    solveGeeTestProxyless(websiteURL,
+    async solveGeeTestProxyless(websiteURL,
                           gt,
                           challenge,
                           apiSubdomain,
                           getLib) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -498,24 +457,20 @@ module.exports = {
                     geetestGetLib:              getLib,
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return await this.waitForResult(taskCreateResult.taskId);
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-
-    solveGeeTestV4Proxyless(websiteURL,
+    async solveGeeTestV4Proxyless(websiteURL,
                           captchaId,
                           apiSubdomain,
                           initParameters) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -527,19 +482,16 @@ module.exports = {
                     initParameters:             initParameters,
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return await this.waitForResult(taskCreateResult.taskId);
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveGeeTestProxyOn(websiteURL,
+    async solveGeeTestProxyOn(websiteURL,
                            gt,
                            challenge,
                            apiSubdomain,
@@ -551,7 +503,7 @@ module.exports = {
                            proxyPassword,
                            userAgent,
                            cookies) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -571,22 +523,16 @@ module.exports = {
                     cookies:                cookies
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return await this.waitForResult(taskCreateResult.taskId);
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveGeeTestV4ProxyOn(websiteURL,
+    async solveGeeTestV4ProxyOn(websiteURL,
                           captchaId,
                           apiSubdomain,
                           initParameters,
@@ -597,7 +543,7 @@ module.exports = {
                           proxyPassword,
                           userAgent,
                           cookies) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -616,24 +562,17 @@ module.exports = {
                     cookies:                cookies
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return await this.waitForResult(taskCreateResult.taskId);
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-
-    solveTurnstileProxyless(websiteURL, websiteKey, action = "") {
-        return new Promise((resolve, reject) => {
+    async solveTurnstileProxyless(websiteURL, websiteKey, action = "") {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' :  {
@@ -643,20 +582,18 @@ module.exports = {
                     action:                 action
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution.token)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
 
-    solveTurnstileProxyOn(websiteURL,
+    async solveTurnstileProxyOn(websiteURL,
                             websiteKey,
                             proxyType,
                             proxyAddress,
@@ -664,7 +601,7 @@ module.exports = {
                             proxyLogin,
                             proxyPassword,
                             action = "") {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -679,22 +616,19 @@ module.exports = {
                     proxyPassword:          proxyPassword
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    if (solution.cookies) {
-                        this.settings.cookies = solution.cookies;
-                    }
-                    resolve(solution.token)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    solveAntiGateTask(websiteURL,
+
+
+    async sendAntiGateTask(websiteURL,
                       templateName,
                       variables,
                       proxyAddress,
@@ -702,16 +636,17 @@ module.exports = {
                       proxyLogin,
                       proxyPassword,
                       domainsOfInterest) {
-        return new Promise((resolve, reject) => {
-            if (typeof templateName != "string") {
-                reject('Parameter "templateName" must be a string');
-            }
-            if (typeof variables != "object") {
-                reject('Parameter "variables" must be an object');
-            }
-            if (typeof domainsOfInterest != "object") {
-                domainsOfInterest = [];
-            }
+
+        if (typeof templateName != "string") {
+            throw 'Parameter "templateName" must be a string';
+        }
+        if (typeof variables != "object") {
+            throw 'Parameter "variables" must be an object';
+        }
+        if (typeof domainsOfInterest != "object") {
+            domainsOfInterest = [];
+        }
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -726,37 +661,50 @@ module.exports = {
                     domainsOfInterest:      domainsOfInterest
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return taskCreateResult.taskId;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    pushAntiGateVariable(name, value) {
-        return new Promise((resolve, reject) => {
-            this.JSONRequest('pushAntiGateVariable', {
+    async solveAntiGateTask(websiteURL,
+                      templateName,
+                      variables,
+                      proxyAddress,
+                      proxyPort,
+                      proxyLogin,
+                      proxyPassword,
+                      domainsOfInterest) {
+        const taskId = await
+            this.sendAntiGateTask(websiteURL,
+                templateName,
+                variables,
+                proxyAddress,
+                proxyPort,
+                proxyLogin,
+                proxyPassword,
+                domainsOfInterest);
+        return await this.waitForResult(taskId);
+    },
+
+    async pushAntiGateVariable(name, value) {
+        return await this.JSONRequest('pushAntiGateVariable', {
                 'clientKey' : this.settings.clientKey,
                 'taskId': this.settings.taskId,
                 'name': name,
                 'value': value
             })
-                .then(resolve)
-                .catch(err => reject(err));
-        });
     },
 
-    solveAntiBotCookieTask(websiteURL,
+    async solveAntiBotCookieTask(websiteURL,
                       proxyAddress,
                       proxyPort,
                       proxyLogin,
                       proxyPassword) {
-        return new Promise((resolve, reject) => {
+        const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
                 'task' : {
@@ -768,69 +716,50 @@ module.exports = {
                     proxyPassword:          proxyPassword
                 },
                 'softId' : this.settings.softId
-            })
-                .then(res => {
-                    this.settings.taskId = res.taskId;
-                    return this.waitForResult(res.taskId);
-                })
-                .then(solution => {
-                    resolve(solution)
-                })
-                .catch(err => reject(err));
-        });
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            return await this.waitForResult(taskCreateResult.taskId);
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
     },
 
-    waitForResult(taskId) {
-        return new Promise((resolve, reject) => {
+    async waitForResult(taskId) {
 
-            (async () => {
+        if (this.settings.isVerbose) console.log('created task with ID '+taskId);
+        if (this.settings.isVerbose) console.log('waiting '+this.settings.firstAttemptWaitingInterval+' seconds');
+        await this.delay(this.settings.firstAttemptWaitingInterval * 1000);
 
-                if (this.settings.isVerbose) console.log('created task with ID '+taskId);
-                if (this.settings.isVerbose) console.log('waiting '+this.settings.firstAttemptWaitingInterval+' seconds');
-                await this.delay(this.settings.firstAttemptWaitingInterval * 1000);
-
-                while (taskId > 0) {
-                    await this.JSONRequest('getTaskResult', {
-                        'clientKey' :   this.settings.clientKey,
-                        'taskId'    :   taskId
-                    })
-                        .then(response => {
-                            if (response.status === 'ready') {
-                                taskId = 0;
-                                resolve(response.solution);
-                            }
-                            if (response.status === 'processing') {
-                                if (this.settings.isVerbose) console.log('captcha result is not yet ready');
-                            }
-                        })
-                        .catch(error => {
-                            taskId = 0;
-                            reject(error);
-                        });
-
-
-                    if (this.settings.isVerbose) console.log('waiting '+this.settings.normalWaitingInterval+' seconds');
-                    await this.delay(this.settings.normalWaitingInterval * 1000);
-
-                }
-
-            })();
-
-
-        });
-
-    },
-    JSONRequest(methodName, payLoad) {
-        return new Promise((resolve, reject) => {
-
-            if (typeof process !== 'object' || typeof require !== 'function') {
-                const message = 'Application should be run either in NodeJs or a WebBrowser environment';
-                console.error(message);
-                reject(message);
+        while (taskId > 0) {
+            const checkResult = await this.JSONRequest('getTaskResult', {
+                'clientKey' :   this.settings.clientKey,
+                'taskId'    :   taskId
+            });
+            if (checkResult.status === 'ready') {
+                return checkResult.solution;
+            }
+            if (checkResult.status === 'processing') {
+                if (this.settings.isVerbose) console.log('captcha result is not yet ready');
             }
 
-            const axios = require('axios')
-            axios.post('https://api.anti-captcha.com/' + methodName,
+            if (this.settings.isVerbose) console.log('waiting '+this.settings.normalWaitingInterval+' seconds');
+            await this.delay(this.settings.normalWaitingInterval * 1000);
+
+        }
+    },
+
+    async JSONRequest(methodName, payLoad) {
+
+        if (typeof process !== 'object' || typeof require !== 'function') {
+            const message = 'Application should be run either in NodeJs or a WebBrowser environment';
+            if (this.settings.isVerbose) console.error(message);
+            throw message;
+        }
+        const axios = require('axios');
+
+        const response =
+            await axios.post('https://api.anti-captcha.com/' + methodName,
                 payLoad,
                 {
                     timeout: this.connectionTimeout * 1000,
@@ -838,42 +767,33 @@ module.exports = {
                         'content-type':     'application/json; charset=utf-8',
                         'accept':           'application/json'
                     }
-                })
-                .then(res => {
-                    return this.checkForErrors(res.data);
-                })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch((error) => reject(error))
+                });
 
-
-        });
+        return this.checkForErrors(response.data);
     },
+
     checkForErrors(response) {
-        return new Promise((resolve, reject) => {
-            if (typeof response.errorId === "undefined") {
-                reject("Incorrect API response, something is wrong");
-                return;
-            }
-            if (typeof response.errorId !== "number") {
-                reject("Unknown API error code "+response.errorId);
-                return;
-            }
-            if (response.errorId > 0) {
-                console.error('Received API error '+response.errorCode+': '+response.errorDescription);
-                reject(response.errorCode);
-                return;
-            }
-            resolve(response);
-        });
+        if (typeof response.errorId === "undefined") {
+            throw "Incorrect API response, something is wrong";
+        }
+        if (typeof response.errorId !== "number") {
+            throw "Unknown API error code "+response.errorId
+        }
+        if (response.errorId > 0) {
+            if (this.settings.isVerbose) console.error('Received API error '+response.errorCode+': '+response.errorDescription);
+            throw response.errorCode;
+        }
+        return response;
     },
+
     getCookies() {
         return this.settings.cookies;
     },
+
     getHcaptchaUserAgent() {
         return this.settings.hcaptchaUserAgent;
     },
+
     delay(time) {
         return new Promise(function(resolve) {
             setTimeout(resolve, time)
