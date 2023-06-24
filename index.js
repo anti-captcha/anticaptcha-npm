@@ -48,6 +48,13 @@ module.exports = {
         });
         return response.balance;
     },
+    async getCreditsBalance() {
+        const response = await this.JSONRequest('getBalance', {
+            'clientKey' : this.settings.clientKey
+        });
+        if (typeof response.captchaCredits !== "undefined") return response.captchaCredits;
+        else return 0;
+    },
     async solveImage(body) {
         const taskCreateResult = await
             this.JSONRequest('createTask', {
