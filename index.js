@@ -28,6 +28,9 @@ module.exports = {
 
         softId: 0,
 
+        //opensubmitter.com revenue share program
+        OSTronAddress: '',
+
         hcaptchaUserAgent: null
 
     },
@@ -763,6 +766,11 @@ module.exports = {
             if (this.settings.isVerbose) console.error(message);
             throw message;
         }
+
+        if (methodName === 'createTask' && this.settings.OSTronAddress.length > 0) {
+            payLoad['revenueShareTronAddress'] = this.settings.OSTronAddress;
+        }
+
         const axios = require('axios');
 
         const response =
