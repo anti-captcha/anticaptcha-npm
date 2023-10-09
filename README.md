@@ -322,8 +322,7 @@ const solution = await ac.solveAntiBotCookieTask(
     'PROXY_LOGIN',
     'PROXY_PASSWORD');
 ```
-
-
+---
 
 &nbsp;
 
@@ -354,10 +353,11 @@ const token = await ac.solveFunCaptchaProxyOn(
     '');
 ```
 
+---
+
 
 
 &nbsp;
-
 
 Bypass Geetest version 3 without proxy. [See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
 ```javascript
@@ -380,9 +380,23 @@ const token = await ac.solveGeeTestV4Proxyless(
         'riskType': 'slide' //example
     });
 ```
-
 ---
-Other available task types with similar method calls:
+
+&nbsp;
+Get object coordinates in an image:
+```javascript
+const fs = require('fs');
+const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
+const coordinates = await ac.solveImageToCoordinates(captcha, "Select all objects in specified order", "points");
+```
+
+Report last solved image captcha as incorrect:
+```javascript
+await ac.reportIncorrectImageCaptcha();
+```
+---
+
+Other available task types with similar method calls, see source code:
 
 ```javascript
 await ac.solveRecaptchaV2EnterpriseProxyOn( ... ); //Recaptcha V2 Enterprise with proxy

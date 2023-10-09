@@ -735,6 +735,30 @@ module.exports = {
         }
     },
 
+    async solveImageToCoordinates(body, comment, mode = "points") {
+        if (['points', 'rectangles'].indexOf(mode) === -1) {
+            mode = "points"
+        }
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:           'ImageToCoordinatesTask',
+                    body:           body,
+                    comment:        comment,
+                    mode:           mode
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.coordinates;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
     async waitForResult(taskId) {
 
         if (this.settings.isVerbose) console.log('created task with ID '+taskId);
