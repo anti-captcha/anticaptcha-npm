@@ -198,9 +198,11 @@ const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM',
     {
         'rqdata': 'rqdata from target website',
         'sentry': true,
-        // set here parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
+        // set here optional parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
         // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
-    });
+    },
+    false, //set isInvisible  = false
+    true); //set isEnterprise = true
 const userAgent = ac.getHcaptchaUserAgent();
 // use this userAgent for posting the form with token!
 ```
@@ -223,9 +225,11 @@ const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM',
     {
         'rqdata': 'rqdata from target website',
         'sentry': true,
-        // set here parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
+        // set here optional parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
         // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
-    });
+    },
+    false, //set isInvisible  = false
+    true); //set isEnterprise = true
 const userAgent = ac.getHcaptchaUserAgent();
 // use this userAgent for posting the form with token!
 ```
@@ -236,7 +240,7 @@ const userAgent = ac.getHcaptchaUserAgent();
 
 Solve Turnstile without proxy:
 ```javascript
-const token = await ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'optional_action');
+const token = await ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'optional_action', 'optional_cData_token');
 ```
 ---
 &nbsp;
@@ -250,7 +254,8 @@ const token = await ac.solveTurnstileProxyOn('http://DOMAIN.COM',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD',
-    'optional_action');
+    'optional_action',
+    'optional_cData_token');
 ```
 ---
 &nbsp;
