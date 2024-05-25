@@ -31,7 +31,8 @@ module.exports = {
         //opensubmitter.com revenue share program
         OSTronAddress: '',
 
-        hcaptchaUserAgent: null
+        hcaptchaUserAgent: null,
+        hcaptchaRespKey: null
 
     },
     setAPIKey(key) {
@@ -303,6 +304,8 @@ module.exports = {
 
     async solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload, isInvisible, isEnterprise) {
         if (typeof userAgent === "undefined") userAgent = '';
+        this.settings.hcaptchaUserAgent = null;
+        this.settings.hcaptchaRespKey = null;
         const taskPayLoad = {
             type:                   'HCaptchaTaskProxyless',
             websiteURL:             websiteURL,
@@ -327,6 +330,9 @@ module.exports = {
             const solution = await this.waitForResult(taskCreateResult.taskId);
             if (solution.userAgent) {
                 this.settings.hcaptchaUserAgent = solution.userAgent;
+            }
+            if (solution.respKey) {
+                this.settings.hcaptchaRespKey = solution.respKey;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -365,6 +371,8 @@ module.exports = {
         if (typeof isEnterprise === "boolean") {
             if (isEnterprise === true) taskPayLoad['isEnterprise'] = true;
         }
+        this.settings.hcaptchaUserAgent = null;
+        this.settings.hcaptchaRespKey = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -376,6 +384,9 @@ module.exports = {
             const solution = await this.waitForResult(taskCreateResult.taskId);
             if (solution.userAgent) {
                 this.settings.hcaptchaUserAgent = solution.userAgent;
+            }
+            if (solution.respKey) {
+                this.settings.hcaptchaRespKey = solution.respKey;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -841,6 +852,10 @@ module.exports = {
 
     getHcaptchaUserAgent() {
         return this.settings.hcaptchaUserAgent;
+    },
+
+    getHcaptchaRespKey() {
+        return this.settings.hcaptchaRespKey;
     },
 
     delay(time) {

@@ -180,8 +180,13 @@ const gresponse = await ac.solveRecaptchaV2EnterpriseProxyless(
 Solve HCaptcha without proxy:
 ```javascript
 const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'FULL USER AGENT HERE');
-const userAgent = ac.getHcaptchaUserAgent();
+
 // use this userAgent for posting the form with token!
+const userAgent = ac.getHcaptchaUserAgent();
+
+//some Hcaptchas also produce "respkey" value, this is how to get it:
+const respKey = ac.getHcaptchaRespKey();
+
 ```
 Report last solved Hcaptcha as incorrect:
 ```javascript
@@ -203,8 +208,12 @@ const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM',
     },
     false, //set isInvisible  = false
     true); //set isEnterprise = true
-const userAgent = ac.getHcaptchaUserAgent();
+
 // use this userAgent for posting the form with token!
+const userAgent = ac.getHcaptchaUserAgent();
+
+//some Hcaptchas also produce "respkey" value, this is how to get it:
+const respKey = ac.getHcaptchaRespKey();
 ```
 
 ---
