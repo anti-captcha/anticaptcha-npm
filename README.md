@@ -100,6 +100,16 @@ Solve image captcha:
 ```javascript
 const fs = require('fs');
 const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
+
+// Additional flags, see https://anti-captcha.com/apidoc/task-types/ImageToTextTask for description:
+// ac.settings.phrase = true;                  // 2 words
+// ac.settings.case = true;                    // case sensitivity
+// ac.settings.numeric = 1;                    // only numbers
+// ac.settings.comment = "only green letters"; // text comment for workers
+// ac.settings.math = true;                    // math operation like 50+2
+// ac.settings.minLength = 1;                  // minimum amount of characters
+// ac.settings.maxLength = 10;                 // maximum number of characters
+// ac.settings.languagePool = 'en';            // language pool
 const text = await ac.solveImage(captcha, true);
 ```
 

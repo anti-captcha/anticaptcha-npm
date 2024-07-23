@@ -14,7 +14,7 @@ module.exports = {
         math: null,
         minLength: null,
         maxLength: null,
-        languagePool: null,
+        languagePool: 'en',
         comment: null,
 
         connectionTimeout: 20,
@@ -72,9 +72,9 @@ module.exports = {
                     comment:        this.settings.comment,
                     math:           this.settings.math,
                     minLength:      this.settings.minLength,
-                    maxLength:      this.settings.maxLength
+                    maxLength:      this.settings.maxLength,
+                    languagePool : this.settings.languagePool
                 },
-                'languagePool' : this.settings.languagePool,
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {

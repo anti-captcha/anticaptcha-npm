@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.47",
+  "version": "1.0.49",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
