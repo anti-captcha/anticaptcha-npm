@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.49",
+  "version": "1.0.50",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,9 @@
     "cloudflare bypass",
     "datadome",
     "datadome bypass",
-    "object coordinates"
+    "object coordinates",
+    "prosopo",
+    "friendly captcha"
   ],
   "author": "Anti Admin",
   "license": "ISC",
