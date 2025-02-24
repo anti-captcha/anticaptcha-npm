@@ -780,6 +780,114 @@ module.exports = {
         }
     },
 
+
+    async solveProsopoProxyless(websiteURL, websiteKey) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  {
+                    type:                   'ProsopoTaskProxyless',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+    async solveProsopoProxyOn(websiteURL,
+                            websiteKey,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'ProsopoTask',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey,
+                    proxyType:              proxyType,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+
+    async solveFriendlyCaptchaProxyless(websiteURL, websiteKey) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  {
+                    type:                   'FriendlyCaptchaTaskProxyless',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+    async solveFriendlyCaptchaProxyOn(websiteURL,
+                            websiteKey,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'FriendlyCaptchaTask',
+                    websiteURL:             websiteURL,
+                    websiteKey:             websiteKey,
+                    proxyType:              proxyType,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
     async waitForResult(taskId) {
 
         if (this.settings.isVerbose) console.log('created task with ID '+taskId);

@@ -420,6 +420,50 @@ await ac.reportIncorrectImageCaptcha();
 ```
 ---
 
+&nbsp;
+
+Solve Prosopo captcha without proxy:
+```javascript
+const token = await ac.solveProsopoProxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
+```
+---
+&nbsp;
+
+Solve Prosopo captcha with proxy:
+```javascript
+const token = await ac.solveProsopoProxyOn('http://DOMAIN.COM',
+    'WEBSITE_KEY',
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD');
+```
+---
+
+&nbsp;
+
+Solve Friendly Captcha without proxy:
+```javascript
+const token = await ac.solveFriendlyCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
+```
+---
+&nbsp;
+
+Solve Friendly Captcha with proxy:
+```javascript
+const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
+    'WEBSITE_KEY',
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD');
+```
+
+---
+&nbsp;
+
 Other available task types with similar method calls, see source code:
 
 ```javascript
