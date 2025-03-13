@@ -599,7 +599,7 @@ module.exports = {
         }
     },
 
-    async solveTurnstileProxyless(websiteURL, websiteKey, action = "", cData = "") {
+    async solveTurnstileProxyless(websiteURL, websiteKey, action = "", cData = "", chlPageData = "") {
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -608,7 +608,8 @@ module.exports = {
                     websiteURL:             websiteURL,
                     websiteKey:             websiteKey,
                     action:                 action,
-                    turnstileCData:         cData
+                    cData:                  cData,
+                    chlPageData:            chlPageData
                 },
                 'softId' : this.settings.softId
             });
@@ -630,7 +631,8 @@ module.exports = {
                             proxyLogin,
                             proxyPassword,
                             action = "",
-                            cData = "") {
+                            cData = "",
+                            chlPageData = "") {
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -639,7 +641,8 @@ module.exports = {
                     websiteURL:             websiteURL,
                     websiteKey:             websiteKey,
                     action:                 action,
-                    turnstileCData:         cData,
+                    cData:                  cData,
+                    chlPageData:            chlPageData,
                     proxyType:              proxyType,
                     proxyAddress:           proxyAddress,
                     proxyPort:              proxyPort,
