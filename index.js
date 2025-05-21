@@ -891,6 +891,82 @@ module.exports = {
     },
 
 
+    async solveAmazonProxyless(websiteURL, websiteKey, iv, context, captchaScript= "", challengeScript = "") {
+        const task = {
+            type:                   'AmazonTaskProxyless',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            iv:                     iv,
+            context:                context
+        }
+        if (captchaScript != "") {
+            task["captchaScript"] = captchaScript;
+        }
+        if (challengeScript != "") {
+            task["challengeScript"] = challengeScript;
+        }
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  task,
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+    async solveAmazonProxyOn(websiteURL,
+                            websiteKey,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword,
+                            iv,
+                            context,
+                            captchaScript= "",
+                            challengeScript = "") {
+        const task = {
+            type:                   'AmazonTask',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            iv:                     iv,
+            context:                context,
+            proxyType:              proxyType,
+            proxyAddress:           proxyAddress,
+            proxyPort:              proxyPort,
+            proxyLogin:             proxyLogin,
+            proxyPassword:          proxyPassword
+        }
+        if (captchaScript != "") {
+            task["captchaScript"] = captchaScript;
+        }
+        if (challengeScript != "") {
+            task["challengeScript"] = challengeScript;
+        }
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : task,
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+
     async waitForResult(taskId) {
 
         if (this.settings.isVerbose) console.log('created task with ID '+taskId);

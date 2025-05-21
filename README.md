@@ -1,6 +1,23 @@
 ## Official Anti-Captcha.com npm module ##
 
-Official anti-captcha.com npm package for solving images with text, Recaptcha v2/v3 Enterprise/non-Enterpise, Funcaptcha, GeeTest, HCaptcha Enterprise/non-Enterprise.
+### Contents
+- [Intro](#)
+- [Installation](#module-installation)
+- [Request API key balance](#import-and-check-your-balance-in-sync-mode)
+- [Earn with us](#earn-with-anti-captcha)
+- [Image Captcha](#solve-image-captcha)
+- [Recaptcha V2](#recaptcha-v2-without-proxy)
+- [Recaptcha V3](#recaptcha-v3)
+- [Hcaptcha](#hcaptcha-without-proxy)
+- [Turnstile](#turnstile-without-proxy)
+- [Antigate tasks](#antigate-tasks)
+- [Funcaptcha](#funcaptcha--arkoselabs-without-proxy)
+- [Geetest v3](#geetest-version-3-without-proxy)
+- [Geetest v4](#geetest-version-4-without-proxy)
+- [Image to coordinates](#image-to-coordinates)
+- [Amazon WAF](#amazon-waf-without-proxy)
+
+Official anti-captcha.com npm package for solving images with text, Recaptcha v2/v3 Enterprise/non-Enterpise, Funcaptcha, GeeTest, HCaptcha.
 
 [Anti-captcha](https://anti-captcha.com) is an oldest and cheapest web service dedicated to solving captchas by human workers from around the world. By solving captchas with us you help people in poorest regions of the world to earn money, which not only cover their basic needs, but also gives them ability to financially help their families, study and avoid jobs where they're simply not happy.
 
@@ -8,12 +25,12 @@ To use the service you need to [register](https://anti-captcha.com/clients/) and
 
 For more technical information and articles visit our [documentation](https://anti-captcha.com/apidoc) page. 
 
-Module installation:
+### Module installation:
 ```bash
 npm install @antiadmin/anticaptchaofficial
 ```
 
-Import and check your balance in sync mode:
+### Import and check your balance in sync mode:
 ```javascript
 (async() => {
     
@@ -71,6 +88,7 @@ const remainingCredits = await ac.getCreditsBalance();
 ```
 <br>
 
+### Earn with Anti-Captcha
 Specify softId to earn __10% commission__ from all captcha spendings with your app.
 Get your softId in [Developers Center](https://anti-captcha.com/clients/tools/devcenter).
 ```javascript
@@ -78,25 +96,8 @@ ac.setSoftId(SOFT_ID_NUMBER);
 ```
 &nbsp;
 
-All following examples are for sync mode, compatible with promises
----
-Run synchronous code like this:
-&nbsp;
-```javascript
-(async() => {
-    try {
-        // your code here:
-        // const balance = await ac.getBalance();
-        // const token = await ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
-        // etc.
-    } catch (e) {
-        console.error("Received error:", e.toString());
-    }
-})();
-```
-&nbsp;
----
-Solve image captcha:
+
+### Solve image captcha:
 ```javascript
 const fs = require('fs');
 const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
@@ -121,7 +122,7 @@ await ac.reportIncorrectImageCaptcha();
 
 &nbsp;
 
-Solve Recaptcha V2 without proxy:
+### Recaptcha V2 without proxy:
 ```javascript
 ac.settings.recaptchaDataSValue = 'set me for google.com domains';
 const gresponse = ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
@@ -145,7 +146,7 @@ await ac.reportCorrectRecaptcha();
 
 
 
-Solve Recaptcha V2 with proxy:
+### Recaptcha V2 with proxy:
 ```javascript
 const gresponse = await ac.solveRecaptchaV2ProxyOn('http://DOMAIN.COM',
     'WEBSITE_KEY',
@@ -165,7 +166,7 @@ const gresponse = await ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSI
 
 &nbsp;
 
-Solve Recaptcha V3:
+### Recaptcha V3:
 ```javascript
 const gresponse = await ac.solveRecaptchaV3('http://DOMAIN.COM',
     'WEBSITE_KEY',
@@ -187,7 +188,7 @@ const gresponse = await ac.solveRecaptchaV2EnterpriseProxyless(
 
 &nbsp;
 
-Solve HCaptcha without proxy:
+### HCaptcha without proxy:
 ```javascript
 const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'FULL USER AGENT HERE');
 
@@ -205,66 +206,14 @@ await ac.reportIncorrectHcaptcha();
 ---
 &nbsp;
 
-Solve HCaptcha Enterprise without proxy:
-```javascript
-const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM', 
-    'WEBSITE_KEY', 
-    'FULL USER AGENT HERE',
-    {
-        'rqdata': 'rqdata from target website',
-        'sentry': true,
-        // set here optional parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
-        // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
-    },
-    false, //set isInvisible  = false
-    true); //set isEnterprise = true
-
-// use this userAgent for posting the form with token!
-const userAgent = ac.getHcaptchaUserAgent();
-
-//some Hcaptchas also produce "respkey" value, this is how to get it:
-const respKey = ac.getHcaptchaRespKey();
-```
-
----
-&nbsp;
-
-Solve HCaptcha Enterprise with proxy:
-```javascript
-const token = await ac.solveHCaptchaProxyless('http://DOMAIN.COM', 
-    'WEBSITE_KEY', 
-    'FULL USER AGENT HERE',
-    'http',
-    '1.2.3.4',
-    3128,
-    'proxy-login',
-    'proxy-password',
-    '',
-    '',
-    {
-        'rqdata': 'rqdata from target website',
-        'sentry': true,
-        // set here optional parameters like rqdata, sentry, apiEndpoint, endpoint, reportapi, assethost, imghost
-        // for more info go to https://anti-captcha.com/apidoc/task-types/HCaptchaTaskProxyless
-    },
-    false, //set isInvisible  = false
-    true); //set isEnterprise = true
-const userAgent = ac.getHcaptchaUserAgent();
-// use this userAgent for posting the form with token!
-```
-
----
-
-&nbsp;
-
-Solve Turnstile without proxy:
+### Turnstile without proxy:
 ```javascript
 const token = await ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'optional_action', 'optional_cData_token');
 ```
 ---
 &nbsp;
 
-Solve Turnstile with proxy:
+### Turnstile with proxy:
 ```javascript
 const token = await ac.solveTurnstileProxyOn('http://DOMAIN.COM',
     'WEBSITE_KEY',
@@ -279,7 +228,7 @@ const token = await ac.solveTurnstileProxyOn('http://DOMAIN.COM',
 ---
 &nbsp;
 
-Solve AntiGate Task:
+### AntiGate Tasks:
 ```javascript
 const solution = await ac.solveAntiGateTask(
     'http://antigate.com/logintest.php', 
@@ -335,22 +284,10 @@ console.log(solution);
 ```
 
 
-&nbsp;
-
-Bypass Cloudflare / Datadome / etc. [More info about this](https://anti-captcha.com/ru/apidoc/task-types/AntiBotCookieTask):
-```javascript
-const solution = await ac.solveAntiBotCookieTask(
-    'https://www.thewebsite.com/', 
-    'PROXY_IP',
-    'PROXY_PORT',
-    'PROXY_LOGIN',
-    'PROXY_PASSWORD');
-```
----
 
 &nbsp;
 
-Bypass Funcaptcha / Arkoselabs without proxy:
+### Funcaptcha / Arkoselabs without proxy:
 ```javascript
 //optional data blob:
 ac.settings.funcaptchaDataBlob = 'blob value here is any, or leave it empty';
@@ -361,7 +298,7 @@ const token = await ac.solveFunCaptchaProxyless(
 &nbsp;
 
 
-Bypass Funcaptcha / Arkoselabs via proxy:
+### Funcaptcha / Arkoselabs via proxy:
 ```javascript
 //optional data blob:
 ac.settings.funcaptchaDataBlob = 'blob value here is any, or leave it empty';
@@ -383,7 +320,8 @@ const token = await ac.solveFunCaptchaProxyOn(
 
 &nbsp;
 
-Bypass Geetest version 3 without proxy. [See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
+### Geetest version 3 without proxy
+[See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
 ```javascript
 const token = await ac.solveGeeTestProxyless(
     'https://www.thewebsite.com/path',
@@ -394,7 +332,8 @@ const token = await ac.solveGeeTestProxyless(
 
 &nbsp;
 
-Bypass Geetest version 4 without proxy. [See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
+### Geetest version 4 without proxy
+[See tutorial](https://anti-captcha.com/tutorials/how-to-use-chrome-breakpoints-for-finding-funcaptcha-and-geetest-api-parameters) how to find these parameters.
 ```javascript
 const token = await ac.solveGeeTestV4Proxyless(
     'https://www.thewebsite.com/path',
@@ -407,7 +346,8 @@ const token = await ac.solveGeeTestV4Proxyless(
 ---
 
 &nbsp;
-Get object coordinates in an image:
+
+### Image to coordinates
 ```javascript
 const fs = require('fs');
 const captcha = fs.readFileSync('captcha.png', { encoding: 'base64' });
@@ -422,7 +362,7 @@ await ac.reportIncorrectImageCaptcha();
 
 &nbsp;
 
-Solve Prosopo captcha without proxy:
+### Prosopo captcha
 ```javascript
 const token = await ac.solveProsopoProxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
 ```
@@ -443,7 +383,7 @@ const token = await ac.solveProsopoProxyOn('http://DOMAIN.COM',
 
 &nbsp;
 
-Solve Friendly Captcha without proxy:
+### Friendly Captcha without proxy:
 ```javascript
 const token = await ac.solveFriendlyCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
 ```
@@ -459,6 +399,38 @@ const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD');
+```
+---
+
+&nbsp;
+
+### Amazon WAF without proxy:
+```javascript
+const token = await ac.solveAmazonProxyless('http://DOMAIN.COM', 
+    'key_value_from_window.gokuProps_object',
+    'iv_value_from_window.gokuProps_object',
+    'context_value_from_window.gokuProps_object',
+    'https://e9b10f157f38.9a96e8b4.us-gov-west-1.captcha.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/captcha.js', //optional
+    'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
+); 
+```
+---
+&nbsp;
+
+Solve Amazon WAF with proxy:
+```javascript
+const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
+    'key_value_from_window.gokuProps_object',
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD',
+    'iv_value_from_window.gokuProps_object',
+    'context_value_from_window.gokuProps_object',
+    'https://e9b10f157f38.9a96e8b4.us-gov-west-1.captcha.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/captcha.js', //optional
+    'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
+);
 ```
 
 ---
