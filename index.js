@@ -966,6 +966,71 @@ module.exports = {
     },
 
 
+    async solveAmazonWidgetProxyless(websiteURL, websiteKey, jsapiScript) {
+        const task = {
+            type:                   'AmazonTaskProxyless',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            wafType:                "widget",
+            jsapiScript:            jsapiScript
+        }
+        if (jsapiScript.length == 0) {
+            throw new Error("jsapiScript URL is empty")
+        }
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  task,
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+    async solveAmazonWidgetProxyOn(websiteURL,
+                            websiteKey,
+                            jsapiScript,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword) {
+        const task = {
+            type:                   'AmazonTask',
+            websiteURL:             websiteURL,
+            websiteKey:             websiteKey,
+            wafType:                "widget",
+            jsapiScript:            jsapiScript,
+            proxyType:              proxyType,
+            proxyAddress:           proxyAddress,
+            proxyPort:              proxyPort,
+            proxyLogin:             proxyLogin,
+            proxyPassword:          proxyPassword
+        }
+        if (jsapiScript.length == 0) {
+            throw new Error("jsapiScript URL is empty")
+        }
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : task,
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
 
     async waitForResult(taskId) {
 

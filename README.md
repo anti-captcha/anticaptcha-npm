@@ -404,7 +404,10 @@ const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
 
 &nbsp;
 
-### Amazon WAF without proxy:
+### Amazon WAF:
+Two options here:
+1. When captcha is at the bot filtering page and you need aws-was-token cookie:
+#### without proxy:
 ```javascript
 const token = await ac.solveAmazonProxyless('http://DOMAIN.COM', 
     'key_value_from_window.gokuProps_object',
@@ -414,12 +417,10 @@ const token = await ac.solveAmazonProxyless('http://DOMAIN.COM',
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
 ); 
 ```
----
-&nbsp;
 
-Solve Amazon WAF with proxy:
+#### with proxy:
 ```javascript
-const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
+const token = await ac.solveAmazonProxyOn('http://DOMAIN.COM',
     'key_value_from_window.gokuProps_object',
     'http', //http, socks4, socks5
     'PROXY_IP',
@@ -432,6 +433,27 @@ const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
 );
 ```
+2. When captcha is a standalone widget which is triggered by user's action:
+#### without proxy:
+```javascript
+const token = await ac.solveAmazonWidgetProxyless('http://DOMAIN.COM', 
+    'widget_api_key',     // get key from AwsWafCaptcha.renderCaptcha function
+    'https://164cb210e333.edge.captcha-sdk.awswaf.com/164cb210e333/jsapi.js' // full path to jsapi.js integration script
+); 
+```
+#### with proxy:
+```javascript
+const token = await ac.solveAmazonWidgetProxyOn('http://DOMAIN.COM',
+    'widget_api_key',
+    'https://164cb210e333.edge.captcha-sdk.awswaf.com/164cb210e333/jsapi.js', // full path to jsapi.js integration script
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD'
+);
+```
+For more details visit [Anti-Captcha Amazon WAF documentation](https://anti-captcha.com/apidoc/task-types/AmazonTaskProxyless).
 
 ---
 &nbsp;
