@@ -1,6 +1,6 @@
 {
   "name": "@antiadmin/anticaptchaofficial",
-  "version": "1.0.53",
+  "version": "1.0.54",
   "description": "Official Anti-Captcha.com npm library",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,8 @@
     "friendly captcha",
     "amazonwaf",
     "amazon waf",
-    "amazon-waf-token"
+    "amazon-waf-token",
+    "altcha"
   ],
   "author": "Anti Admin",
   "license": "ISC",

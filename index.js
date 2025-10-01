@@ -1056,6 +1056,63 @@ module.exports = {
         }
     },
 
+
+
+    async solveAltchaProxyless(websiteURL, challengeURL, challengeJSON) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' :  {
+                    type:                   'AltchaTaskProxyless',
+                    websiteURL:             websiteURL,
+                    challengeURL:           challengeURL,
+                    challengeJSON:          challengeJSON
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
+
+    async solveAltchaProxyOn(websiteURL,
+                            challengeURL,
+                            challengeJSON,
+                            proxyType,
+                            proxyAddress,
+                            proxyPort,
+                            proxyLogin,
+                            proxyPassword) {
+        const taskCreateResult = await
+            this.JSONRequest('createTask', {
+                'clientKey' : this.settings.clientKey,
+                'task' : {
+                    type:                   'AltchaCaptchaTask',
+                    websiteURL:             websiteURL,
+                    challengeURL:           challengeURL,
+                    challengeJSON:          challengeJSON,
+                    proxyType:              proxyType,
+                    proxyAddress:           proxyAddress,
+                    proxyPort:              proxyPort,
+                    proxyLogin:             proxyLogin,
+                    proxyPassword:          proxyPassword
+                },
+                'softId' : this.settings.softId
+            });
+        if (taskCreateResult.taskId) {
+            this.settings.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            return solution.token;
+        } else {
+            throw "ERROR_NO_SLOT_AVAILABLE";
+        }
+    },
+
     async JSONRequest(methodName, payLoad) {
 
         if (typeof process !== 'object' || typeof require !== 'function') {

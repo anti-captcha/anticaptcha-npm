@@ -16,6 +16,7 @@
 - [Geetest v4](#geetest-version-4-without-proxy)
 - [Image to coordinates](#image-to-coordinates)
 - [Amazon WAF](#amazon-waf-without-proxy)
+- [Altcha](#altcha-captcha-without-proxy)
 
 Official anti-captcha.com npm package for solving images with text, Recaptcha v2/v3 Enterprise/non-Enterpise, Funcaptcha, GeeTest, HCaptcha.
 
@@ -456,6 +457,29 @@ const token = await ac.solveAmazonWidgetProxyOn('http://DOMAIN.COM',
 For more details visit [Anti-Captcha Amazon WAF documentation](https://anti-captcha.com/apidoc/task-types/AmazonTaskProxyless).
 
 ---
+&nbsp;
+
+
+### Altcha captcha without proxy:
+```javascript
+const token = await ac.solveAltchaProxyless('http://DOMAIN.COM', '/some/challenge/url');
+```
+---
+&nbsp;
+
+Solve Altcha captcha with proxy:
+```javascript
+const token = await ac.solveAltchaProxyOn('http://DOMAIN.COM',
+    '/some/challenge/url',
+    null,
+    'http', //http, socks4, socks5
+    'PROXY_IP',
+    'PROXY_PORT',
+    'PROXY_LOGIN',
+    'PROXY_PASSWORD');
+```
+---
+
 &nbsp;
 
 Other available task types with similar method calls, see source code:
