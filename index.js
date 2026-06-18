@@ -21,19 +21,18 @@ module.exports = {
         firstAttemptWaitingInterval: 5,
         normalWaitingInterval: 2,
         isVerbose: true,
-        taskId: 0,
 
         funcaptchaApiJSSubdomain: null,
         funcaptchaDataBlob: null,
 
         softId: 0,
-
-        //opensubmitter.com revenue share program
-        OSTronAddress: '',
-
-        hcaptchaUserAgent: null,
+        revenueShareTronAddress: '',
+    },
+    session: {
+        taskId: 0,
+        cookies: null,
+        userAgent: null,
         hcaptchaRespKey: null
-
     },
     setAPIKey(key) {
         this.settings.clientKey = key;
@@ -78,7 +77,7 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
             return solution.text;
         } else {
@@ -88,7 +87,7 @@ module.exports = {
     async reportIncorrectImageCaptcha() {
         await this.JSONRequest('reportIncorrectImageCaptcha', {
                 'clientKey' : this.settings.clientKey,
-                'taskId': this.settings.taskId
+                'taskId': this.session.taskId
             })
         return true;
     },
@@ -104,6 +103,8 @@ module.exports = {
         if (isInvisible === true) {
             task['isInvisible'] = true
         }
+        this.session.userAgent = null;
+        this.session.cookies = null;
         const taskCreateResult =
             await this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -111,10 +112,13 @@ module.exports = {
                 'softId'    : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             if (solution.cookies) {
-                this.settings.cookies = solution.cookies;
+                this.session.cookies = solution.cookies;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -150,6 +154,8 @@ module.exports = {
         if (isInvisible === true) {
             task['isInvisible'] = true;
         }
+        this.session.userAgent = null;
+        this.session.cookies = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -157,10 +163,13 @@ module.exports = {
                 'softId'    : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             if (solution.cookies) {
-                this.settings.cookies = solution.cookies;
+                this.session.cookies = solution.cookies;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -182,9 +191,17 @@ module.exports = {
                 },
                 'softId' : this.settings.softId
             });
+        this.session.userAgent = null;
+        this.session.cookies = null;
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            if (solution.cookies) {
+                this.session.cookies = solution.cookies;
+            }
             return solution.gRecaptchaResponse;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -203,6 +220,8 @@ module.exports = {
         if (enterprisePayload) {
             taskObject["enterprisePayload"] = enterprisePayload;
         }
+        this.session.userAgent = null;
+        this.session.cookies = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -210,8 +229,14 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            if (solution.cookies) {
+                this.session.cookies = solution.cookies;
+            }
             return solution.gRecaptchaResponse;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -244,6 +269,8 @@ module.exports = {
         if (enterprisePayload) {
             taskObject["enterprisePayload"] = enterprisePayload;
         }
+        this.session.userAgent = null;
+        this.session.cookies = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -251,8 +278,14 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            if (solution.cookies) {
+                this.session.cookies = solution.cookies;
+            }
             return solution.gRecaptchaResponse;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -273,11 +306,16 @@ module.exports = {
                 },
                 'softId' : this.settings.softId
             });
+        this.session.userAgent = null;
+        this.session.cookies = null;
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             if (solution.cookies) {
-                this.settings.cookies = solution.cookies;
+                this.session.cookies = solution.cookies;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -288,7 +326,7 @@ module.exports = {
     async reportIncorrectRecaptcha() {
         await this.JSONRequest('reportIncorrectRecaptcha', {
                 'clientKey' : this.settings.clientKey,
-                'taskId': this.settings.taskId
+                'taskId': this.session.taskId
             })
         return true;
     },
@@ -296,7 +334,7 @@ module.exports = {
     async reportCorrectRecaptcha() {
         await this.JSONRequest('reportCorrectRecaptcha', {
             'clientKey' : this.settings.clientKey,
-            'taskId': this.settings.taskId
+            'taskId': this.session.taskId
         });
         return true;
     },
@@ -304,8 +342,8 @@ module.exports = {
 
     async solveHCaptchaProxyless(websiteURL, websiteKey, userAgent, enterprisePayload, isInvisible, isEnterprise) {
         if (typeof userAgent === "undefined") userAgent = '';
-        this.settings.hcaptchaUserAgent = null;
-        this.settings.hcaptchaRespKey = null;
+        this.session.userAgent = null;
+        this.session.hcaptchaRespKey = null;
         const taskPayLoad = {
             type:                   'HCaptchaTaskProxyless',
             websiteURL:             websiteURL,
@@ -326,13 +364,13 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
             if (solution.userAgent) {
-                this.settings.hcaptchaUserAgent = solution.userAgent;
+                this.session.userAgent = solution.userAgent;
             }
             if (solution.respKey) {
-                this.settings.hcaptchaRespKey = solution.respKey;
+                this.session.hcaptchaRespKey = solution.respKey;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -371,8 +409,8 @@ module.exports = {
         if (typeof isEnterprise === "boolean") {
             if (isEnterprise === true) taskPayLoad['isEnterprise'] = true;
         }
-        this.settings.hcaptchaUserAgent = null;
-        this.settings.hcaptchaRespKey = null;
+        this.session.userAgent = null;
+        this.session.hcaptchaRespKey = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -380,13 +418,13 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
             if (solution.userAgent) {
-                this.settings.hcaptchaUserAgent = solution.userAgent;
+                this.session.userAgent = solution.userAgent;
             }
             if (solution.respKey) {
-                this.settings.hcaptchaRespKey = solution.respKey;
+                this.session.hcaptchaRespKey = solution.respKey;
             }
             return solution.gRecaptchaResponse;
         } else {
@@ -398,12 +436,13 @@ module.exports = {
     async reportIncorrectHcaptcha() {
         await this.JSONRequest('reportIncorrectHcaptcha', {
                 'clientKey' : this.settings.clientKey,
-                'taskId': this.settings.taskId
+                'taskId': this.session.taskId
             });
         return true;
     },
 
     async solveFunCaptchaProxyless(websiteURL, websiteKey) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -419,8 +458,11 @@ module.exports = {
                 'softId' : this.settings.softId
             })
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -436,6 +478,7 @@ module.exports = {
                          proxyPassword,
                          userAgent,
                          cookies) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -458,8 +501,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -473,6 +519,7 @@ module.exports = {
                           challenge,
                           apiSubdomain,
                           getLib) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -487,8 +534,12 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
-            return await this.waitForResult(taskCreateResult.taskId);
+            this.session.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            return solution;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
         }
@@ -498,6 +549,7 @@ module.exports = {
                           captchaId,
                           apiSubdomain,
                           initParameters) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -512,8 +564,12 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
-            return await this.waitForResult(taskCreateResult.taskId);
+            this.session.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            return solution;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
         }
@@ -531,6 +587,7 @@ module.exports = {
                            proxyPassword,
                            userAgent,
                            cookies) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -553,8 +610,12 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
-            return await this.waitForResult(taskCreateResult.taskId);
+            this.session.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            return solution;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
         }
@@ -571,6 +632,7 @@ module.exports = {
                           proxyPassword,
                           userAgent,
                           cookies) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -592,14 +654,19 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
-            return await this.waitForResult(taskCreateResult.taskId);
+            this.session.taskId = taskCreateResult.taskId;
+            const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
+            return solution;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
         }
     },
 
     async solveTurnstileProxyless(websiteURL, websiteKey, action = "", cData = "", chlPageData = "") {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -614,8 +681,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -633,6 +703,7 @@ module.exports = {
                             action = "",
                             cData = "",
                             chlPageData = "") {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -652,8 +723,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -697,7 +771,7 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             return taskCreateResult.taskId;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -727,7 +801,7 @@ module.exports = {
     async pushAntiGateVariable(name, value) {
         return await this.JSONRequest('pushAntiGateVariable', {
                 'clientKey' : this.settings.clientKey,
-                'taskId': this.settings.taskId,
+                'taskId': this.session.taskId,
                 'name': name,
                 'value': value
             })
@@ -752,7 +826,7 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             return await this.waitForResult(taskCreateResult.taskId);
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -775,7 +849,7 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
             return solution.coordinates;
         } else {
@@ -785,6 +859,7 @@ module.exports = {
 
 
     async solveProsopoProxyless(websiteURL, websiteKey) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -796,8 +871,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -812,6 +890,7 @@ module.exports = {
                             proxyPort,
                             proxyLogin,
                             proxyPassword) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -828,8 +907,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -839,6 +921,7 @@ module.exports = {
 
 
     async solveFriendlyCaptchaProxyless(websiteURL, websiteKey) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -850,8 +933,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -866,6 +952,7 @@ module.exports = {
                             proxyPort,
                             proxyLogin,
                             proxyPassword) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -882,8 +969,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -892,6 +982,7 @@ module.exports = {
 
 
     async solveAmazonProxyless(websiteURL, websiteKey, iv, context, captchaScript= "", challengeScript = "") {
+        this.session.userAgent = null;
         const task = {
             type:                   'AmazonTaskProxyless',
             websiteURL:             websiteURL,
@@ -912,8 +1003,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -932,6 +1026,7 @@ module.exports = {
                             context,
                             captchaScript= "",
                             challengeScript = "") {
+        this.session.userAgent = null;
         const task = {
             type:                   'AmazonTask',
             websiteURL:             websiteURL,
@@ -957,8 +1052,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -967,6 +1065,7 @@ module.exports = {
 
 
     async solveAmazonWidgetProxyless(websiteURL, websiteKey, jsapiScript) {
+        this.session.userAgent = null;
         const task = {
             type:                   'AmazonTaskProxyless',
             websiteURL:             websiteURL,
@@ -984,8 +1083,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -1001,6 +1103,7 @@ module.exports = {
                             proxyPort,
                             proxyLogin,
                             proxyPassword) {
+        this.session.userAgent = null;
         const task = {
             type:                   'AmazonTask',
             websiteURL:             websiteURL,
@@ -1023,8 +1126,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -1059,6 +1165,7 @@ module.exports = {
 
 
     async solveAltchaProxyless(websiteURL, challengeURL, challengeJSON) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -1071,8 +1178,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -1088,6 +1198,7 @@ module.exports = {
                             proxyPort,
                             proxyLogin,
                             proxyPassword) {
+        this.session.userAgent = null;
         const taskCreateResult = await
             this.JSONRequest('createTask', {
                 'clientKey' : this.settings.clientKey,
@@ -1105,8 +1216,11 @@ module.exports = {
                 'softId' : this.settings.softId
             });
         if (taskCreateResult.taskId) {
-            this.settings.taskId = taskCreateResult.taskId;
+            this.session.taskId = taskCreateResult.taskId;
             const solution = await this.waitForResult(taskCreateResult.taskId);
+            if (solution.userAgent) {
+                this.session.userAgent = solution.userAgent;
+            }
             return solution.token;
         } else {
             throw "ERROR_NO_SLOT_AVAILABLE";
@@ -1121,8 +1235,8 @@ module.exports = {
             throw message;
         }
 
-        if (methodName === 'createTask' && this.settings.OSTronAddress.length > 0) {
-            payLoad['revenueShareTronAddress'] = this.settings.OSTronAddress;
+        if (methodName === 'createTask' && this.settings.revenueShareTronAddress.length > 0) {
+            payLoad['revenueShareTronAddress'] = this.settings.revenueShareTronAddress;
         }
 
         const axios = require('axios');
@@ -1156,15 +1270,19 @@ module.exports = {
     },
 
     getCookies() {
-        return this.settings.cookies;
+        return this.session.cookies;
+    },
+
+    getUserAgent() {
+        return this.session.userAgent;
     },
 
     getHcaptchaUserAgent() {
-        return this.settings.hcaptchaUserAgent;
+        return this.session.userAgent;
     },
 
     getHcaptchaRespKey() {
-        return this.settings.hcaptchaRespKey;
+        return this.session.hcaptchaRespKey;
     },
 
     delay(time) {

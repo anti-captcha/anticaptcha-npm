@@ -130,6 +130,8 @@ const gresponse = ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY
 console.log('g-response: '+gresponse);
 console.log('google cookies:');
 console.log(ac.getCookies());
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 Learn what to do with g-response in [this](https://anti-captcha.com/apidoc/articles/how-to-use-g-response) article.
 
@@ -162,6 +164,8 @@ const gresponse = await ac.solveRecaptchaV2ProxyOn('http://DOMAIN.COM',
 Solve Recaptcha V2-invisible (note the 3rd parameter "true"):
 ```javascript
 const gresponse = await ac.solveRecaptchaV2Proxyless('http://DOMAIN.COM', 'WEBSITE_KEY', true)
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
@@ -173,6 +177,8 @@ const gresponse = await ac.solveRecaptchaV3('http://DOMAIN.COM',
     'WEBSITE_KEY',
     0.3, //minimum score required: 0.3, 0.7 or 0.9
     'PAGE_ACTION_CAN_BE_EMPTY');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 
 Solve Recaptcha V2 Enterprise without proxy:
@@ -184,6 +190,8 @@ const gresponse = await ac.solveRecaptchaV2EnterpriseProxyless(
         "s" : "SOME_TOKEN",
         "custom_parameter" : "string_number_boolean" 
     });
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
@@ -210,6 +218,8 @@ await ac.reportIncorrectHcaptcha();
 ### Turnstile without proxy:
 ```javascript
 const token = await ac.solveTurnstileProxyless('http://DOMAIN.COM', 'WEBSITE_KEY', 'optional_action', 'optional_cData_token');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 &nbsp;
@@ -225,6 +235,8 @@ const token = await ac.solveTurnstileProxyOn('http://DOMAIN.COM',
     'PROXY_PASSWORD',
     'optional_action',
     'optional_cData_token');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 &nbsp;
@@ -295,6 +307,8 @@ ac.settings.funcaptchaDataBlob = 'blob value here is any, or leave it empty';
 const token = await ac.solveFunCaptchaProxyless(
     'https://www.thewebsite.com/path',
     'site-key');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 &nbsp;
 
@@ -313,6 +327,8 @@ const token = await ac.solveFunCaptchaProxyOn(
     'proxy-password',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116',
     '');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 
 ---
@@ -329,6 +345,8 @@ const token = await ac.solveGeeTestProxyless(
     'gt key 32 bytes',
     'challenge value 32 bytes',
     'optional.api-domain.com');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 
 &nbsp;
@@ -343,6 +361,8 @@ const token = await ac.solveGeeTestV4Proxyless(
     {
         'riskType': 'slide' //example
     });
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
@@ -379,6 +399,8 @@ const token = await ac.solveProsopoProxyOn('http://DOMAIN.COM',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
@@ -387,6 +409,8 @@ const token = await ac.solveProsopoProxyOn('http://DOMAIN.COM',
 ### Friendly Captcha without proxy:
 ```javascript
 const token = await ac.solveFriendlyCaptchaProxyless('http://DOMAIN.COM', 'WEBSITE_KEY');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 &nbsp;
@@ -400,6 +424,8 @@ const token = await ac.solveFriendlyCaptchaProxyOn('http://DOMAIN.COM',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
@@ -417,6 +443,8 @@ const token = await ac.solveAmazonProxyless('http://DOMAIN.COM',
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.captcha.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/captcha.js', //optional
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
 ); 
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 
 #### with proxy:
@@ -433,6 +461,8 @@ const token = await ac.solveAmazonProxyOn('http://DOMAIN.COM',
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.captcha.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/captcha.js', //optional
     'https://e9b10f157f38.9a96e8b4.us-gov-west-1.token.awswaf.com/e9b10f157f38/76cbcde1c834/2a564e323e7b/challenge.js'  //optional
 );
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 2. When captcha is a standalone widget which is triggered by user's action:
 #### without proxy:
@@ -441,6 +471,8 @@ const token = await ac.solveAmazonWidgetProxyless('http://DOMAIN.COM',
     'widget_api_key',     // get key from AwsWafCaptcha.renderCaptcha function
     'https://164cb210e333.edge.captcha-sdk.awswaf.com/164cb210e333/jsapi.js' // full path to jsapi.js integration script
 ); 
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 #### with proxy:
 ```javascript
@@ -453,6 +485,8 @@ const token = await ac.solveAmazonWidgetProxyOn('http://DOMAIN.COM',
     'PROXY_LOGIN',
     'PROXY_PASSWORD'
 );
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 For more details visit [Anti-Captcha Amazon WAF documentation](https://anti-captcha.com/apidoc/task-types/AmazonTaskProxyless).
 
@@ -467,6 +501,8 @@ const token = await ac.solveAltchaProxyless('http://DOMAIN.COM', '/some/challeng
 
 // with challenge JSON retrieved from challengeurl:
 const token = await ac.solveAltchaProxyless('http://DOMAIN.COM', '', '{"algorithm":"SHA-256","challenge":"2a40f7ba3393f9513011179de41c7221f14e563856de2f647233a00accf9c28b","salt":"08d7f273d79df143355b9e5n","signature":"1de2bbf282420aef6ca0a84c38c85e2b1e40023d28bef72278d735555a8f47fb"}');
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 &nbsp;
@@ -492,6 +528,10 @@ const token = await ac.solveAltchaProxyOn('http://DOMAIN.COM',
     'PROXY_PORT',
     'PROXY_LOGIN',
     'PROXY_PASSWORD');
+
+// in case you need it and it is available:
+console.log('worker\'s user-agent:');
+console.log(ac.getUserAgent());
 ```
 ---
 
