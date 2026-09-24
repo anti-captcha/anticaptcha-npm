@@ -188,8 +188,9 @@ const gresponse = await ac.solveRecaptchaV2EnterpriseProxyless(
     'WEBSITE_KEY', 
     {   //enterprise payload:
         "s" : "SOME_TOKEN",
-        "custom_parameter" : "string_number_boolean" 
-    });
+        "action" : "form_submit"
+    },
+    false);
 console.log('worker\'s user-agent:');
 console.log(ac.getUserAgent());
 ```

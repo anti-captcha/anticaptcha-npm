@@ -210,7 +210,8 @@ module.exports = {
 
     async solveRecaptchaV2EnterpriseProxyless(websiteURL,
                                         websiteKey,
-                                        enterprisePayload = null) {
+                                        enterprisePayload = null,
+                                        isInvisible = false) {
 
         const taskObject = {
             type:                   'RecaptchaV2EnterpriseTaskProxyless',
@@ -219,6 +220,9 @@ module.exports = {
         };
         if (enterprisePayload) {
             taskObject["enterprisePayload"] = enterprisePayload;
+        }
+        if (isInvisible) {
+            taskObject["isInvisible"] = true;
         }
         this.session.userAgent = null;
         this.session.cookies = null;
@@ -253,7 +257,8 @@ module.exports = {
                                       proxyLogin,
                                       proxyPassword,
                                       userAgent,
-                                      cookies) {
+                                      cookies,
+                                      isInvisible = false) {
         const taskObject = {
             type:                   'RecaptchaV2EnterpriseTask',
             websiteURL:             websiteURL,
@@ -268,6 +273,9 @@ module.exports = {
         };
         if (enterprisePayload) {
             taskObject["enterprisePayload"] = enterprisePayload;
+        }
+        if (isInvisible) {
+            taskObject["isInvisible"] = true;
         }
         this.session.userAgent = null;
         this.session.cookies = null;
